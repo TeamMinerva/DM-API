@@ -1,5 +1,5 @@
 import { useState } from "react"
-import logo  from "../assets/logo.png"
+import logo  from "../assets/dm-logo.png"
 import { LayoutGrid, SlidersHorizontal } from "lucide-react"
 
 export default function Sidebar() {
@@ -7,7 +7,7 @@ export default function Sidebar() {
 
   return (
     <aside className="flex h-screen">
-      <div className="w-28 bg-[#202AD0] rounded-r-[0.5rem] flex flex-col items-center pt-40 gap-8">
+      <div className="w-28 bg-[#202AD0] rounded-r-[0.5rem] flex flex-col items-center pt-48 gap-8">
         <button
           onClick={() => setIsOpen(!isOpen)}
          
@@ -23,11 +23,11 @@ export default function Sidebar() {
 
       {isOpen && (
 
-        <div className="w-40 bg-[#2350DE] color rounded-r-[2rem] flex flex-col pt-20 px-8 text-white ">
+        <div className="w-48 bg-[#2350DE] color rounded-tr-[2.5rem] rounded-br-[2.5rem] flex flex-col pt-12  px-12  text-white shadow-2xl ">
 
-          <img src = {logo} alt="logo da DM" className="w-12 mb-12 self-center" />
+          <img src = {logo} alt="logo da DM" className="w-20 mb-9 self-center" />
 
-          <nav className="flex flex-col gap-9 text-base pt-5" >
+          <nav className="flex flex-col gap-9 text-base pt-16">
             <a href="#" className="hover:opacity-80">Dashboard</a>
             <a href="#" className="hover:opacity-80">Mercado</a>
             <a href="#" className="hover:opacity-80">Risco</a>
