@@ -1,5 +1,6 @@
 import Sidebar from "../components/Sidebar"
 import Topbar from "../components/Topbar"
+import DashboardMapCard from "../features/dashboard/DashboardMapCard"
 
 export default function Home() {
   return (
@@ -11,8 +12,12 @@ export default function Home() {
       <div className="flex-1">
         <Topbar />
 
-        <main className="px-8 pb-8">
-          <div className="h-[500px] rounded-2xl bg-transparent" />
+        <main className="p-8">
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12 lg:col-span-8"> 
+              <DashboardMapCard/>
+            </div>
+          </div>
         </main>
       </div>
     </div>
