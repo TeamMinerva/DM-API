@@ -4,6 +4,8 @@ import datetime
 import requests
 import zipfile
 
+# download do zip
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 current_date = str(int(str(datetime.datetime.now()).split("-")[0]) - 1)
@@ -21,19 +23,37 @@ def baixar_arquivo(link):
 
 baixar_arquivo(url)
 
+# criacao do dataframe
+
 dfs = []
+
+colunas = [
+    "data_base", "uf", "numero_de_operacoes",
+    "carteira_ativa", "carteira_inadimplencia",
+    "ativo_problematico", "porte", "cliente",
+]
+
+colunas_numericas = [
+    "carteira_ativa",
+    "carteira_inadimplencia",
+    "ativo_problematico",
+]
 
 with zipfile.ZipFile(filename) as zf:
     for nome in zf.namelist():
         with zf.open(nome) as file:
-            df = pd.read_csv(file, sep=";")
-            df_filtrado = df[["data_base", "uf", "numero_de_operacoes", "carteira_ativa", "carteira_inadimplencia", "ativo_problematico", "porte", "cliente"]]
+            df = pd.read_csv(file, sep=";", usecols=colunas)
+            df_filtrado = df.copy()
 
             df_filtrado = df_filtrado.assign(
                 data_base=pd.to_datetime(df_filtrado["data_base"]),
-                carteira_ativa=pd.to_numeric(df_filtrado["carteira_ativa"].astype(str).str.replace(",", ".", regex=False), errors="coerce"),
-                carteira_inadimplencia=pd.to_numeric(df_filtrado["carteira_inadimplencia"].astype(str).str.replace(",", ".", regex=False), errors="coerce"),
-                ativo_problematico=pd.to_numeric(df_filtrado["ativo_problematico"].astype(str).str.replace(",", ".", regex=False), errors="coerce"),
+                **{
+                    col: pd.to_numeric(
+                        df_filtrado[col].astype(str).str.replace(",", ".", regex=False),
+                        errors="coerce",
+                    )
+                    for col in colunas_numericas
+                }
             )
             dfs.append(df_filtrado)
 
