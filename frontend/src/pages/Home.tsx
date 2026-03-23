@@ -13,9 +13,13 @@ export default function Home() {
         <Topbar />
 
         <main className="p-8">
-          <div className="grid grid-cols-12 gap-6">
-            <div className="col-span-12 lg:col-span-8"> 
-              <DashboardMapCard/>
+          <div className="flex flex-col lg:flex-row gap-6">
+            <div className="w-full lg:w-2/3">
+              <DashboardMapCard />
+            </div>
+
+            <div className="w-full lg:w-1/3">
+              {/* Outro card */}
             </div>
           </div>
         </main>
