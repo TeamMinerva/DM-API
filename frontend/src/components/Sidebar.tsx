@@ -1,6 +1,7 @@
 import { useState } from "react"
 import logo  from "../assets/dm-logo.png"
 import { LayoutGrid, SlidersHorizontal } from "lucide-react"
+import { Link } from "react-router-dom"
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -28,10 +29,25 @@ export default function Sidebar() {
           <img src = {logo} alt="logo da DM" className="w-20 mb-9 self-center" />
 
           <nav className="flex flex-col gap-9 text-base pt-16">
-            <a href="#" className="hover:opacity-80">Dashboard</a>
-            <a href="#" className="hover:opacity-80">Mercado</a>
-            <a href="#" className="hover:opacity-80">Risco</a>
-            <a href="#" className="hover:opacity-80">Expansão</a>
+
+            <Link to="/" className="hover:opacity-80">
+              Dashboard
+              
+            </Link>
+
+            <Link to="/Mercado" className="hover:opacity-80">
+              Mercado
+            </Link>
+
+
+            <Link to="/Risco" className="hover:opacity-80">
+              Risco
+            </Link>
+
+            <Link to="/Expansao" className="hover:opacity-80">
+              Expansão
+            </Link>
+
           </nav>
         </div>
       )}
