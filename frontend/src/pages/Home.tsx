@@ -12,34 +12,33 @@ export default function Home() {
         <Topbar />
 
         <main className="p-8">
-          {/* Trocamos a div simples por uma estrutura em coluna para acomodar os cards e o mapa */}
           <div className="flex flex-col gap-6">
             
-            {/* Linha com os 4 KpiCards lado a lado no topo */}
+            {/* Linha com os 4 KpiCards e as cores exatas do Figma */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <KpiCard 
                 title="Volume de Concessões" 
                 value="R$ 1.5M" 
-                topColor="amarelo" 
+                topColor="#FFE473" 
               />
               <KpiCard 
                 title="Crescimento da Carteira" 
                 value="+12%" 
-                topColor="verde" 
+                topColor="#68E699" 
               />
               <KpiCard 
                 title="Inadimplência" 
                 value="3.8%" 
-                topColor="vermelho" 
+                topColor="#FF928A" 
               />
               <KpiCard 
                 title="Endividamento" 
                 value="28%" 
-                topColor="teal" 
+                topColor="#7DF4ED" 
               />
             </div>
 
-            {/* O mapa que a sua colega fez ocupando a parte de baixo */}
+            {/* O mapa ocupando a parte de baixo */}
             <div className="w-full">
                <BrazilMap />
             </div>
