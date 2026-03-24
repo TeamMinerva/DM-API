@@ -13,8 +13,8 @@ type StateKey =
 type Category = "high_activity" | "high_growth"
 
 const categoryColors = {
-  high_activity: "#1E3A8A", 
-  high_growth: "#14B8A6",   
+  high_activity: "#202AD0", 
+  high_growth: "#7DF4ED",   
   default: "#E5E7EB"
 }
 
@@ -81,16 +81,17 @@ export default function BrazilMap() {
   }
 
   return (
-    <div className="w-full h-full relative group">
+    <div className="W-full h-[450px] relative bg-transparent">
       <MapContainer
-        center={[-16.50, -51.0]}
+        center={[-15.75, -48.0]}
         zoom={3} 
         scrollWheelZoom={false}
         dragging={false}
         doubleClickZoom={false}
         zoomControl={false}
-        className="w-full h-full bg-transparent outline-none"
-        style={{ width: "100%", height: "100%" }}
+        attributionControl={false}
+        className="w-full h-full bg-transparent outline-none z-10"
+        style={{ width: "45%", height: "100%", background: "transparent" }}
       >
         <GeoJSON
           data={geoData}
