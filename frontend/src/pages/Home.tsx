@@ -1,7 +1,7 @@
-import BrazilMap from "../components/maps/BrazilMap"
 import Sidebar from "../components/Sidebar"
 import Topbar from "../components/Topbar"
-import { KpiCard } from "../components/KpiCard"
+import KpiCard from "../components/KpiCard" // Note que aqui tiramos as chaves {}
+import MapContainer from "../components/MapContainer" // Importando o MapContainer que ela criou
 
 export default function Home() {
   return (
@@ -14,33 +14,37 @@ export default function Home() {
         <main className="p-8">
           <div className="flex flex-col gap-6">
             
-            {/* Linha com os 4 KpiCards e as cores exatas do Figma */}
+            {/* Linha com os 4 KpiCards ajustados para as novas props da sua amiga */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <KpiCard 
-                title="Volume de Concessões" 
+                label="Volume de Concessões" 
                 value="R$ 1.5M" 
-                topColor="#FFE473" 
+                borderColor="#FFE473"
+                footerText="+5% (mock)" 
               />
               <KpiCard 
-                title="Crescimento da Carteira" 
-                value="+12%" 
-                topColor="#68E699" 
+                label="Crescimento da Carteira" 
+                value="12%" 
+                borderColor="#68E699"
+                footerText="+2% (mock)" 
               />
               <KpiCard 
-                title="Inadimplência" 
+                label="Inadimplência" 
                 value="3.8%" 
-                topColor="#FF928A" 
+                borderColor="#FF928A"
+                footerText="-0.5% (mock)" 
               />
               <KpiCard 
-                title="Endividamento" 
+                label="Endividamento" 
                 value="28%" 
-                topColor="#7DF4ED" 
+                borderColor="#7DF4ED"
+                footerText="Estável (mock)" 
               />
             </div>
 
-            {/* O mapa ocupando a parte de baixo */}
+            {/* O MapContainer oficial ocupando a parte de baixo */}
             <div className="w-full">
-               <BrazilMap />
+               <MapContainer />
             </div>
 
           </div>
