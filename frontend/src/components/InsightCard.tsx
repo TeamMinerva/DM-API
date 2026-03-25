@@ -6,41 +6,14 @@ interface InsightCardProps {
 }
 
 const InsightCard: React.FC<InsightCardProps> = ({ title, description }) => {
-  const containerStyle: React.CSSProperties = {
-    width: '368px',
-    height: '317px',
-    backgroundColor: '#1D1DD4',
-    borderRadius: '20px',
-    padding: '24px',
-    boxSizing: 'border-box',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-    fontFamily: "'Catamaran', sans-serif",
-    opacity: 1
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: '20px',
-    fontWeight: 600,
-    lineHeight: '100%',
-    color: '#F1EFFF',
-    margin: 0
-  };
-
-  const descriptionStyle: React.CSSProperties = {
-    fontSize: '18px',
-    fontWeight: 600,
-    lineHeight: '130%', // Ajuste leve para legibilidade no modo justify
-    color: '#D8DEF3',
-    textAlign: 'justify',
-    margin: 0
-  };
-
   return (
-    <div style={containerStyle}>
-      <h3 style={titleStyle}>{title}</h3>
-      <p style={descriptionStyle}>{description}</p>
+    <div className="w-full h-full bg-[#1D1DD4] rounded-[20px] p-6 flex flex-col gap-5 box-border font-[Catamaran]">
+      <h3 className="text-xl font-semibold leading-none text-[#F1EFFF] m-0">
+        {title}
+      </h3>
+      <p className="text-lg font-semibold leading-[130%] text-[#D8DEF3] text-justify m-0">
+        {description}
+      </p>
     </div>
   );
 };
