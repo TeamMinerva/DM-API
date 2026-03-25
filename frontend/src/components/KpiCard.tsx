@@ -2,58 +2,43 @@ import React from 'react';
 
 interface KpiCardProps {
   label: string;
-  value: string | number; // Aceita string para casos como "6,2T" ou número para formatar
+  value: string | number;
   footerText: string;
   borderColor: string;
 }
 
+const renderValue = (value: string | number) => {
+  if (typeof value === 'number') {
+    return <>{value.toLocaleString('pt-BR')}</>;
+  }
+
+  const match = value.match(/^(R)(\$)(.*)$/);
+  if (match) {
+    return (
+      <>
+        {match[1]}
+        <span className="font-[Arial] text-[34px]">{match[2]}</span>
+        {match[3]}
+      </>
+    );
+  }
+
+  return <>{value}</>;
+};
+
 const KpiCard: React.FC<KpiCardProps> = ({ label, value, footerText, borderColor }) => {
   return (
-    <div style={{ 
-      width: '221px',
-      height: '185px',
-      backgroundColor: '#F1EFFF',
-      borderRadius: '20px',
-      borderTop: `5px solid ${borderColor}`,
-      display: 'flex',
-      flexDirection: 'column',
-      padding: '24px',
-      boxSizing: 'border-box',
-      fontFamily: "'Catamaran', sans-serif",
-      opacity: 1
-    }}>
-      {/* Label (Título Principal) */}
-      <span style={{
-        fontSize: '20px',
-        fontWeight: 600,
-        lineHeight: '100%',
-        color: '#7B7E86',
-        marginBottom: '12px',
-        display: 'block'
-      }}>
+    <div
+      className="w-[221px] h-[185px] bg-[#F1EFFF] rounded-[20px] flex flex-col p-6 box-border font-[Catamaran]"
+      style={{ borderTop: `5px solid ${borderColor}` }}
+    >
+      <span className="text-xl font-semibold leading-none text-[#7B7E86] mb-3 block">
         {label}
       </span>
-
-      {/* Valor Principal (Números Grandes) */}
-      <span style={{
-        fontSize: '36px',
-        fontWeight: 600,
-        lineHeight: '100%',
-        color: '#1E1E1E',
-        marginBottom: 'auto',
-        display: 'block'
-      }}>
-        {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
+      <span className="text-[36px] font-semibold leading-none text-[#1E1E1E] mb-auto block">
+        {renderValue(value)}
       </span>
-
-      {/* Escrita da parte de baixo menor */}
-      <span style={{
-        fontSize: '18px',
-        fontWeight: 600,
-        lineHeight: '100%',
-        color: '#7B7E86',
-        display: 'block'
-      }}>
+      <span className="text-lg font-semibold leading-none text-[#7B7E86] block">
         {footerText}
       </span>
     </div>
