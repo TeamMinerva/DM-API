@@ -3,6 +3,12 @@ import datetime
 import requests
 import pandas as pd
 import zipfile
+from sqlalchemy import create_engine
+
+# helpers
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "..", "bd", "dados.db")
 
 
 # baixa o arquivo ZIP do SCR do ano anterior diretamente do Banco Central.
@@ -10,8 +16,6 @@ import zipfile
 # o download é feito em chunks de 8KB para não sobrecarregar a memória.
 # alteração: adicionado BASE_DIR para garantir que o ZIP seja salvo
 # sempre na mesma pasta do script, independente de onde ele for executado.
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def baixar_zip():
     ano_anterior = datetime.datetime.now().year - 1
@@ -78,11 +82,27 @@ def carregar_dados(filename):
 def apagar_zip(filename):
     os.remove(filename)
 
+# cria a conexão com o banco de dados SQLite.
+# o DB_PATH sobe um nível a partir do script e entra na pasta bd.
+# o create_engine não abre a conexão imediatamente — ela só é aberta
+# quando realmente necessário, como no momento do .to_sql().
 
+def conectar_banco():
+    engine = create_engine(f"sqlite:///{DB_PATH}")
+    return engine
 
+# insere o DataFrame no banco de dados na tabela dados_bcb.
+# if_exists="replace" recria a tabela a cada execução, mantendo os dados atualizados.
+# index=False evita que o índice do DataFrame vire uma coluna desnecessária no banco.
+
+def inserir_dados(dt,engine):
+    dt.to_sql("dados_bcb", engine, if_exists="replace", index=False)
+    
 
 # execucao das funcoes
 
 filename = baixar_zip()
 dt = carregar_dados(filename)
+engine = conectar_banco()
+inserir_dados(dt, engine)
 apagar_zip(filename)
