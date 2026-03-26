@@ -27,3 +27,4 @@ venv
 __pycache__
 .ipynb_checkpoints
 data-analysis/scrdata_2025.zip
+*.db
