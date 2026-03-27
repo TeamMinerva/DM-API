@@ -4,21 +4,29 @@ const router = express.Router();
 const db = require('../database/connection'); 
 
 router.get('/estados', (req, res) => {
-    // Usamos ROW_NUMBER() para numerar os registros de cada UF do mais recente (1) para o mais antigo
     const query = `
-        WITH MesesRankeados AS (
+        WITH CarteiraPorMes AS (
             SELECT 
-                uf, 
-                carteira_ativa,
-                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base DESC) as ranking
+                uf,
+                data_base,
+                SUM(carteira_ativa) AS carteira_ativa
             FROM dados_bcb
+            GROUP BY uf, data_base
+        ),
+        MesesRankeados AS (
+            SELECT
+                uf,
+                data_base,
+                carteira_ativa,
+                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base DESC) AS ranking
+            FROM CarteiraPorMes
         )
-        SELECT 
+        SELECT
             atual.uf,
-            atual.carteira_ativa AS carteira_ativa_atual,
-            anterior.carteira_ativa AS carteira_ativa_anterior
+            atual.carteira_ativa AS carteira_final,
+            anterior.carteira_ativa AS carteira_inicial
         FROM MesesRankeados atual
-        LEFT JOIN MesesRankeados anterior ON atual.uf = anterior.uf AND anterior.ranking = 2
+        LEFT JOIN MesesRankeados anterior ON atual.uf = anterior.uf AND anterior.ranking = 7
         WHERE atual.ranking = 1;
     `;
 
@@ -29,19 +37,18 @@ router.get('/estados', (req, res) => {
         }
 
         const resultados = rows.map(row => {
-            const atual = row.carteira_ativa_atual;
-            const anterior = row.carteira_ativa_anterior;
+            const inicial = row.carteira_inicial;
+            const final = row.carteira_final;
             let crescimento = 0;
 
-            // Calcula o crescimento se houver dados do mês anterior (evita divisão por zero)
-            if (anterior && anterior > 0) {
-                crescimento = ((atual - anterior) / anterior) * 100;
+            if (inicial && inicial > 0) {
+                crescimento = ((final - inicial) / inicial) * 100;
             }
 
             return {
                 uf: row.uf,
-                carteira_ativa: Number(atual), 
-                crescimento: Number(crescimento.toFixed(2)) // Arredonda para 2 casas decimais
+                carteira_ativa: Number(final).toFixed(2),
+                crescimento: Number(crescimento.toFixed(2))
             };
         });
 
