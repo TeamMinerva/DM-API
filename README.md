@@ -1,4 +1,5 @@
 # DM-API
+<img src="docs/assets/header.jpeg">
 <p align="center">
   |    
     <a href="#-descrição-do-desafio"> Descrição do Desafio </a> |
@@ -87,14 +88,23 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 <table>
 
 ## 🏆 MVP
-<img src="docs/assets/mvp.png" width="390">
+<img src="docs/assets/mvp.jpeg">
 
 ## 📅 Sprints
-|🎯 Sprint | ✅ Staus    | 📅 Período  |📄 Documentação    |
-| -------- | -------------|------------- | ----------------- |
-| Sprint 1 | Em andamento |16/03 - 05/04 | Link documentação |
-| Sprint 2 | Planejada    |13/04 - 03/05 | Link documentação |
-| Sprint 3 | Planejada    |11/05 - 31/05 | Link documentação |
+### 🎯 Sprint 1
+- ✅ Status: Em andamento
+- 📅 Período: 16/03 - 05/04
+- 📄 Documentação: [Clique aqui](docs/sprints/sprint1.md)
+
+### 🎯 Sprint 2
+- ✅ Status: Planejada
+- 📅 Período: 13/04 - 03/05
+- 📄 Documentação: [Clique aqui](docs/sprints/sprint2.md)
+
+### 🎯 Sprint 3
+- ✅ Status: Planejada
+- 📅 Período: 11/05 - 31/05
+- 📄 Documentação: [Clique aqui](docs/sprints/sprint3.md)
 
 ## 💻 Tecnologias utilizadas
 <p align="center">
