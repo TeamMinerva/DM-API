@@ -1,14 +1,19 @@
 import React from "react"
-import BrazilMap from "../components/maps/BrazilMap"
+import BrazilMap from "./maps/BrazilMap"
+import type { EstadoData } from "../hooks/useEstados"
 
-const MapCard: React.FC = () => {
+interface MapCardProps {
+  estadosData: EstadoData[]
+}
+
+const MapCard: React.FC<MapCardProps> = ({ estadosData }) => {
   return (
     <div className="w-full h-full bg-[#F1EFFF] rounded-[20px] p-[30px] box-border flex flex-col gap-4 font-[Catamaran] relative overflow-hidden">
       <h3 className="text-xl font-semibold leading-none text-[#7B7E86] m-0">
         Distribuição da Carteira Ativa por Estado
       </h3>
       <div className="absolute top-[40px] left-[-40px] w-[110%] h-[85%] z-10 pointer-events-none">
-        <BrazilMap />
+        <BrazilMap estadosData={estadosData} />
       </div>
       <div className="flex-1" />
       <div className="flex flex-col gap-2 relative z-20">

@@ -6,7 +6,7 @@ interface KpiData {
   carteiraTotal: string
   crescimentoCarteira: string
   inadimplencia: string
-  totalOperacoes: number
+  totalOperacoes: string
   dataBase: string | null
 }
 
@@ -17,10 +17,19 @@ interface KpiState {
 }
 
 const formatCurrency = (value: number): string => {
+  if (value >= 1_000_000_000_000) return `R$ ${(value / 1_000_000_000_000).toFixed(1)}T`
   if (value >= 1_000_000_000) return `R$ ${(value / 1_000_000_000).toFixed(1)}B`
   if (value >= 1_000_000) return `R$ ${(value / 1_000_000).toFixed(1)}M`
   if (value >= 1_000) return `R$ ${(value / 1_000).toFixed(1)}K`
   return `R$ ${value.toFixed(2)}`
+}
+
+const formatOperacoes = (value: number): string => {
+  if (value >= 1_000_000_000_000) return `${(value / 1_000_000_000_000).toFixed(1)}T`
+  if (value >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(1)}B`
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`
+  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}mil`
+  return `${value}`
 }
 
 export function useDashboardKpis(): KpiState {
@@ -53,7 +62,7 @@ export function useDashboardKpis(): KpiState {
                 ? `${crescimento.crescimento_carteira}%`
                 : 'N/A',
             inadimplencia: `${kpis.inadimplencia_media}%`,
-            totalOperacoes: kpis.total_operacoes,
+            totalOperacoes: formatOperacoes(kpis.total_operacoes),
             dataBase: kpis.data_base,
           },
           loading: false,

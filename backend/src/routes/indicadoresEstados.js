@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-const db = require('../database/connection'); 
+const db = require('../database/connection');
 
 router.get('/estados', (req, res) => {
     const query = `
@@ -18,15 +17,17 @@ router.get('/estados', (req, res) => {
                 uf,
                 data_base,
                 carteira_ativa,
-                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base DESC) AS ranking
+                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base DESC) AS ranking,
+                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base ASC) AS ranking_asc
             FROM CarteiraPorMes
         )
         SELECT
             atual.uf,
             atual.carteira_ativa AS carteira_final,
-            anterior.carteira_ativa AS carteira_inicial
+            primeiro.carteira_ativa AS carteira_inicial
         FROM MesesRankeados atual
-        LEFT JOIN MesesRankeados anterior ON atual.uf = anterior.uf AND anterior.ranking = 7
+        LEFT JOIN MesesRankeados primeiro 
+            ON atual.uf = primeiro.uf AND primeiro.ranking_asc = 1
         WHERE atual.ranking = 1;
     `;
 
@@ -47,7 +48,7 @@ router.get('/estados', (req, res) => {
 
             return {
                 uf: row.uf,
-                carteira_ativa: Number(final).toFixed(2),
+                carteira_ativa: Number(final),
                 crescimento: Number(crescimento.toFixed(2))
             };
         });
