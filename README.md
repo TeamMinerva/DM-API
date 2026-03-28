@@ -27,65 +27,75 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 <table>
     <tr>
         <th>Rank</th>
+        <th>Prioridade</th>
         <th>User Story</th>
         <th>Sprint</th>
         <th>Estimativa</th>
     </tr>
     <tr>
         <td>1</td>
+        <td>Alta</td>
         <td>Como analista da DM Card, quero acessar o dashboard pelo navegador, para consultar os dados de crédito a qualquer momento.</td>
         <td>1</td>
         <td>5</td>
     </tr>
     <tr>
         <td>2</td>
+        <td>Alta</td>
         <td>Como analista da DM Card, quero visualizar o painel inicial com os dados nacionais de concessão de crédito, para ter uma visão geral antes de aprofundar a análise regional.</td>
         <td>1</td>
         <td>8</td>
     </tr>
     <tr>
         <td>3</td>
+        <td>Alta</td>
         <td>Como analista da DM Card, quero acessar o dashboard em qualquer dispositivo e tamanho de tela sem perda de funcionalidade, para consultar os dados onde estiver.</td>
         <td>1</td>
         <td>5</td>
     </tr>
     <tr>
         <td>4</td>
+        <td>Média</td>
         <td>Como analista da DM Card, quero ver um gráfico de linha com a evolução dos indicadores ao longo do tempo para o estado selecionado, para entender tendências de crescimento da carteira naquela região.</td>
         <td>2</td>
         <td>8</td>
     </tr>
     <tr>
         <td>5</td>
+        <td>Média</td>
         <td>Como analista da DM Card, quero comparar a taxa de inadimplência de múltiplas regiões em gráfico de barras e heatmap, para tomar decisões sobre onde expandir operações de crédito com baixo risco.</td>
         <td>2</td>
         <td>8</td>
     </tr>
     <tr>
         <td>6</td>
+        <td>Média</td>
         <td>Como analista da DM Card, quero visualizar o ranking dos estados por volume de carteira ativa, para identificar as regiões com maior concentração de crédito e comparar sua evolução.</td>
         <td>2</td>
         <td>13</td>
     </tr>
     <tr>
         <td>7</td>
+        <td>Baixa</td>
         <td>Como analista da DM Card, quero visualizar um score composto por estado que combine os indicadores de concessão, inadimplência e endividamento, para ter uma visão estratégica do potencial de expansão sustentável de crédito.</td>
         <td>3</td>
         <td>13</td>
     </tr>
     <tr>
         <td>8</td>
+        <td>Baixa</td>
         <td>Como analista da DM Card, quero um mapa de calor do Brasil onde cada estado é colorido de acordo com o score de potencial de crédito sustentável, para identificar visualmente quais regiões concentram mais oportunidade.</td>
         <td>3</td>
         <td>13</td>
     </tr>
     <tr>
         <td>9</td>
+        <td>Média</td>
         <td>Como analista da DM Card, quero entender quais dados do Banco Central são utilizados e como o índice de potencial é calculado, para validar a metodologia e ter confiança nas análises da plataforma.</td>
         <td>3</td>
         <td>5</td>
     </tr>
-<table>
+</table>
 
 ## 🏆 MVP
 <img src="docs/assets/mvp.jpeg">
