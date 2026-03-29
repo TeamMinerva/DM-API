@@ -26,6 +26,14 @@ interface BrazilMapProps {
   estadosData: EstadoData[]
 }
 
+const formatCarteira = (value: number): string => {
+  if (value >= 1_000_000_000_000) return `R$ ${(value / 1_000_000_000_000).toFixed(1)}T`
+  if (value >= 1_000_000_000)     return `R$ ${(value / 1_000_000_000).toFixed(1)}B`
+  if (value >= 1_000_000)         return `R$ ${(value / 1_000_000).toFixed(1)}M`
+  if (value >= 1_000)             return `R$ ${(value / 1_000).toFixed(1)}K`
+  return `R$ ${value.toFixed(0)}`
+}
+
 export default function BrazilMap({ estadosData }: BrazilMapProps) {
   const maxCarteira = Math.max(...estadosData.map(e => Number(e.carteira_ativa)), 0)
   const threshold = maxCarteira * 0.5
@@ -66,9 +74,7 @@ export default function BrazilMap({ estadosData }: BrazilMapProps) {
       }
     })
 
-    const carteiraFmt = estado
-      ? `R$ ${(Number(estado.carteira_ativa) / 1_000_000).toFixed(1)}M`
-      : 'N/A'
+    const carteiraFmt = estado ? formatCarteira(Number(estado.carteira_ativa)) : 'N/A'
     const crescFmt = estado
       ? `${estado.crescimento >= 0 ? '+' : ''}${estado.crescimento}%`
       : 'N/A'
