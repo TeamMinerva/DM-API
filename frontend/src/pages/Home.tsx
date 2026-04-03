@@ -6,6 +6,7 @@ import InsightCard from "../components/InsightCard";
 import HighlightCard from "../components/HighlightCard";
 import { useDashboardKpis } from "../hooks/useDashboardKpis";
 import { useEstados } from "../hooks/useEstados";
+import { useInsight } from "../hooks/useInsight";
 
 export default function Home() {
   const { data, loading, error } = useDashboardKpis()
@@ -25,6 +26,9 @@ export default function Home() {
   const estadoMaiorCrescimento = estados.length
     ? estados.reduce((a, b) => a.crescimento > b.crescimento ? a : b)
     : null
+
+  const crescimentoNacional = data ? parseFloat(data.crescimentoCarteira) : null
+  const insightText = useInsight(estados, crescimentoNacional)
 
   return (
     <div className="flex h-screen bg-[#FBFCF8]">
@@ -49,7 +53,7 @@ export default function Home() {
                 <MapContainer estadosData={estados} />
               </div>
               <div className="w-[40%] flex flex-col gap-4">
-                <InsightCard description="isso é um teste" />
+                <InsightCard description={insightText || 'Carregando insight...'} />
                 <div className="grid grid-cols-2 gap-[30px]">
                   <HighlightCard
                     title="Estado Destaque"
