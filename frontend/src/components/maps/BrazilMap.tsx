@@ -91,6 +91,7 @@ export default function BrazilMap({ estadosData }: BrazilMapProps) {
     <div className="w-full h-full relative bg-transparent">
       <MapContainer
         key={mapKey}
+        // @ts-ignore
         center={[-14, -47.5]} zoom={3.63} zoomSnap={0}
         scrollWheelZoom={false} dragging={false} doubleClickZoom={false}
         zoomControl={false} attributionControl={false}
@@ -99,6 +100,7 @@ export default function BrazilMap({ estadosData }: BrazilMapProps) {
       >
         <GeoJSON
           data={geoData}
+          // @ts-ignore 
           style={{ weight: 1, opacity: 1, color: "white", fillOpacity: 1 }}
           onEachFeature={onEachState}
         />
