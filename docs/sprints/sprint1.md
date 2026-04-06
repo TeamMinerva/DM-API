@@ -1,7 +1,23 @@
 # Sprint - 1️⃣ 🎯
-## 💻 Base do Sistema Funcionando:
 
-## 📝 Backlog da Sprint:
+<p align="center">
+  |    
+    <a href="#-demonstração-do-sistema"> Demonstração do Sistema </a> |
+    <a href="#-backlog-da-sprint"> Backlog da Sprint </a> |
+    <a href="#-mvp-da-sprint"> MVP da Sprint </a> |
+    <a href="#-dor-e-dod-da-sprint"> DoR e DoD da Sprint </a> |
+</p>
+
+## 💻 Demonstração do Sistema
+Clique para assistir ao vídeo:
+
+<p align="center">
+<a href="https://www.youtube.com/watch?v=OOo5zK6X4Dg" target="_blank">
+  <img src="https://img.youtube.com/vi/OOo5zK6X4Dg/maxresdefault.jpg" width="600">
+</a>
+</p>
+
+## 📝 Backlog da Sprint
 <table>
     <tr>
         <th>Rank</th>
@@ -33,7 +49,7 @@
     </tr>
 </table>
 
-## 🏆 MVP da Sprint:
+## 🏆 MVP da Sprint
 **1️⃣ Sprint I: Estrutura do Projeto e Ingestão de Dados**
 
 Nesta sprint foi realizada a criação da estrutura inicial do projeto e a implementação da leitura dos dados.
@@ -46,7 +62,7 @@ Principais atividades:
 Resultado da sprint: O sistema consegue importar e preparar os dados para análise.
 
 ## 📌 DoR e DoD da Sprint
-### 🔹 User Story 1: Acessar o dashboard pelo navegador
+### User Story 1: Acessar o dashboard pelo navegador
 
 #### ✅ Definition of Ready (DoR)
 - Objetivo da funcionalidade está claro (acesso via navegador)
@@ -61,7 +77,7 @@ Resultado da sprint: O sistema consegue importar e preparar os dados para análi
 - Código versionado no Git
 - Sem erros críticos no console
 
-### 🔹 User Story 2: Visualizar painel inicial com dados nacionais
+### User Story 2: Visualizar painel inicial com dados nacionais
 
 #### ✅ Definition of Ready (DoR)
 - Indicadores nacionais definidos (ex: total de operações, carteira total)
@@ -79,7 +95,7 @@ Resultado da sprint: O sistema consegue importar e preparar os dados para análi
 - Código organizado e reutilizável
 - Testado manualmente (valores conferidos)
 
-### 🔹 User Story 3: Dashboard responsivo (qualquer dispositivo)
+### User Story 3: Dashboard responsivo (qualquer dispositivo)
 
 #### ✅ Definition of Ready (DoR)
 - Layout base já implementado (User Story 1 e 2)

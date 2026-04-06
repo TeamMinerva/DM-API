@@ -26,14 +26,10 @@ pip install -r requirements.txt
 ```
 #### Crie o banco de dados:
 ```
-python etl/fetch.py
+python fetch.py
 ```
 ## Backend
-#### Volte a pasta do projeto:
-```
-cd ..
-```
-#### Acesse a pasta no terminal:
+#### Crie um novo terminal e acesse a pasta:
 ```
 cd backend
 ```
@@ -46,11 +42,7 @@ npm install
 npm run dev
 ```
 ## Frontend
-#### Volte a pasta do projeto:
-```
-cd ..
-```
-#### Acesse a pasta no terminal:
+#### Crie um novo terminal e acesse a pasta:
 ```
 cd frontend
 ```
