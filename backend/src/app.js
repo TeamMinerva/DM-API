@@ -3,6 +3,7 @@ const cors = require("cors");
 const indicadoresRoutes = require("./routes/indicadoresNacionais");
 const kpisRoutes = require("./routes/indicadoresKPI");
 const indicadoresEstadosRoutes = require('./routes/indicadoresEstados');
+const regioesCarteira = require('./routes/regioesCarteira')
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use("/indicadores-nacionais", indicadoresRoutes);
 app.use("/", kpisRoutes);
 app.use("/", indicadoresEstadosRoutes);
+app.use("/regioes", regioesCarteira)
 
 app.get("/", (req, res) => {
   res.json({ message: "API Node.js rodando 🚀" });
