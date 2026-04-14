@@ -102,12 +102,12 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 
 ## 📅 Sprints
 ### 🎯 Sprint 1
-- ✅ Status: Em andamento
+- ✅ Status: Concluída
 - 📅 Período: 16/03 - 05/04
 - 📄 Documentação: [Clique aqui](docs/sprints/sprint1.md)
 
 ### 🎯 Sprint 2
-- ✅ Status: Planejada
+- ✅ Status: Em Andamento
 - 📅 Período: 13/04 - 03/05
 - 📄 Documentação: [Clique aqui](docs/sprints/sprint2.md)
 
@@ -126,9 +126,10 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
   <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white">
 </p>
 
-## 🔗 Links da documentação
+## 🔗 Links do projeto
 - [DoR (Definition of Ready) e DoD (Definition of Done)](docs/DoR-e-DoD.md)
 - [Manual de instalação](docs/manual-de-instalação.md)
+- [Google colab]()
 ## 👨‍💻 Equipe
 <div align="center">
     <table>
