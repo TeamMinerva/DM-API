@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../database/connection');
 
+// Rota para listagem e crescimento dos estados
 router.get('/estados', (req, res) => {
     const query = `
         WITH CarteiraPorMes AS (
@@ -54,6 +55,45 @@ router.get('/estados', (req, res) => {
         });
 
         res.json(resultados);
+    });
+});
+
+// Feature 1: Evolução da carteira ativa por estado (Gráfico de Linha)
+router.get('/carteira-ativa/evolucao', (req, res) => {
+    const estadosQuery = req.query.estados;
+
+    if (!estadosQuery) {
+        return res.status(400).json({ 
+            error: "Parâmetro 'estados' é obrigatório. Exemplo: ?estados=SP,RJ" 
+        });
+    }
+
+    const estados = estadosQuery.split(',').map(e => e.trim().toUpperCase());
+
+    if (estados.length < 2 || estados.length > 3) {
+        return res.status(400).json({ 
+            error: "Envie no mínimo 2 e no máximo 3 estados." 
+        });
+    }
+
+    const placeholders = estados.map(() => '?').join(',');
+    const query = `
+        SELECT 
+            data_base, 
+            uf, 
+            SUM(carteira_ativa) AS carteira_ativa
+        FROM dados_bcb
+        WHERE uf IN (${placeholders})
+        GROUP BY data_base, uf
+        ORDER BY data_base ASC, uf ASC;
+    `;
+
+    db.all(query, estados, (err, rows) => {
+        if (err) {
+            console.error("Erro na evolução da carteira:", err);
+            return res.status(500).json({ error: "Erro interno ao buscar evolução." });
+        }
+        res.json(rows);
     });
 });
 
