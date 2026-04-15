@@ -3,6 +3,12 @@ const router = express.Router();
 const db = require('../database/connection');
 
 router.get('/estados', (req, res) => {
+});
+
+router.get('/carteira-ativa/ranking', (req, res) => {
+    // Pega o parâmetro ?top=N da URL, se nao tiver usa 27 direto 
+    const top = parseInt(req.query.top) || 27;
+
     const query = `
         WITH CarteiraPorMes AS (
             SELECT 
@@ -17,39 +23,41 @@ router.get('/estados', (req, res) => {
                 uf,
                 data_base,
                 carteira_ativa,
-                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base DESC) AS ranking,
-                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base ASC) AS ranking_asc
+                /* LAG pega o valor da linha anterior (mês anterior) para a mesma UF */
+                LAG(carteira_ativa) OVER(PARTITION BY uf ORDER BY data_base ASC) AS carteira_anterior,
+                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base DESC) AS ranking_recente
             FROM CarteiraPorMes
         )
         SELECT
-            atual.uf,
-            atual.carteira_ativa AS carteira_final,
-            primeiro.carteira_ativa AS carteira_inicial
-        FROM MesesRankeados atual
-        LEFT JOIN MesesRankeados primeiro 
-            ON atual.uf = primeiro.uf AND primeiro.ranking_asc = 1
-        WHERE atual.ranking = 1;
+            uf,
+            carteira_ativa AS valor_atual,
+            COALESCE(carteira_anterior, 0) AS valor_anterior
+        FROM MesesRankeados
+        WHERE ranking_recente = 1 -- Filtra apenas o mês mais atual
+        ORDER BY valor_atual DESC
+        LIMIT ?;
     `;
 
-    db.all(query, [], (err, rows) => {
+    db.all(query, [top], (err, rows) => {
         if (err) {
             console.error("Erro ao consultar o banco de dados:", err);
-            return res.status(500).json({ error: "Erro interno ao buscar dados dos estados." });
+            return res.status(500).json({ error: "Erro interno ao buscar ranking." });
         }
 
         const resultados = rows.map(row => {
-            const inicial = row.carteira_inicial;
-            const final = row.carteira_final;
+            const atual = row.valor_atual || 0;
+            const anterior = row.valor_anterior || 0;
             let crescimento = 0;
 
-            if (inicial && inicial > 0) {
-                crescimento = ((final - inicial) / inicial) * 100;
+            // calculo da taxa de crescimento
+            if (anterior > 0) {
+                crescimento = ((atual - anterior) / anterior) * 100;
             }
 
             return {
                 uf: row.uf,
-                carteira_ativa: Number(final),
-                crescimento: Number(crescimento.toFixed(2))
+                credito_ativo: Number(atual.toFixed(2)),
+                taxa_crescimento: Number(crescimento.toFixed(2))
             };
         });
 
