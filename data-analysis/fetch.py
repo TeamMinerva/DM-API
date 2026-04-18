@@ -22,6 +22,9 @@ def baixar_zip():
     url = f"https://www.bcb.gov.br/pda/desig/scrdata_{ano_anterior}.zip"
     filename = os.path.join(BASE_DIR, f"scrdata_{ano_anterior}.zip")
 
+    if os.path.isfile(filename):
+        return filename
+
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
         with open(filename, "wb") as f:
@@ -55,24 +58,30 @@ def carregar_dados(filename):
         for nome in zf.namelist():
             with zf.open(nome) as file:
                 df = pd.read_csv(file, sep=";", usecols=colunas)
-                dfs.append(
-                    df.assign(
-                        data_base=pd.to_datetime(df["data_base"]),
-                        **{
-                            col: pd.to_numeric(
-                                df[col].astype(str).str.replace(",", ".", regex=False),
-                                errors="coerce",
-                            )
-                            for col in colunas_numericas
-                        }
-                    )
+                df["numero_de_operacoes"] = df["numero_de_operacoes"].replace(-1, pd.NA)
+
+                df = df.assign(
+                    data_base=pd.to_datetime(df["data_base"]),
+                    **{
+                        col: pd.to_numeric(
+                            df[col].astype(str).str.replace(",", ".", regex=False),
+                            errors="coerce",
+                        )
+                        for col in colunas_numericas
+                    }
                 )
+
+                # vai agrupar pelo by= e depois somar os valores numéricos, o as_index=false faz com que os valores do by= não se tornem indices
+                df_agrupado = df.groupby(
+                    by=["data_base", "uf", "porte", "cliente"], 
+                    as_index=False
+                )[["numero_de_operacoes", "carteira_ativa", "carteira_inadimplencia", "ativo_problematico"]].sum()
+                dfs.append(df_agrupado)
 
     dt = pd.concat(dfs, ignore_index=True)
     del dfs
 
     dt = dt[dt["porte"] != "Indisponível"].reset_index(drop=True)
-    dt["numero_de_operacoes"] = dt["numero_de_operacoes"].replace(-1, pd.NA)
 
     return dt
 
@@ -100,7 +109,6 @@ def inserir_dados(dt,engine):
     
 
 # execucao das funcoes
-
 filename = baixar_zip()
 dt = carregar_dados(filename)
 engine = conectar_banco()
