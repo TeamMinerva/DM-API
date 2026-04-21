@@ -97,7 +97,7 @@ def apagar_zip(filename):
 # quando realmente necessário, como no momento do .to_sql().
 
 def conectar_banco():
-    engine = create_engine(f"sqlite:///{DB_PATH}")
+    engine = create_engine("postgresql://dm_insights:123456789@db:5432/dm_database")
     return engine
 
 # insere o DataFrame no banco de dados na tabela dados_bcb.
@@ -106,7 +106,6 @@ def conectar_banco():
 
 def inserir_dados(dt,engine):
     dt.to_sql("dados_bcb", engine, if_exists="replace", index=False)
-    
 
 # execucao das funcoes
 filename = baixar_zip()

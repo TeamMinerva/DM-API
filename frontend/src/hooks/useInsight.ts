@@ -10,6 +10,7 @@ const REGIOES: Record<string, string> = {
 }
 
 function classificarMaturidade(estados: EstadoData[]): Record<string, 'consolidado' | 'emergente'> {
+  console.log(estados)
   const valores = [...estados].map(e => e.carteira_ativa).sort((a, b) => a - b)
   const meio = Math.floor(valores.length / 2)
   const mediana = valores.length % 2 !== 0
@@ -59,12 +60,12 @@ export function useInsight(estados: EstadoData[], crescimentoNacional: number | 
   if (!estados.length || crescimentoNacional === null) return ''
 
   const maturidade = classificarMaturidade(estados)
-  const sorted = [...estados].sort((a, b) => b.crescimento - a.crescimento)
+  const sorted = [...estados].sort((a, b) => b.taxa_crescimento - a.taxa_crescimento)
   const top3 = sorted.slice(0, 3)
 
   const { str: regiaoStr, count: regiaoCount } = listarRegioes(top3)
   const verbo = regiaoCount === 1 ? 'lidera' : 'lideram'
-  const destaques = top3.map(e => `${e.uf} (+${e.crescimento.toFixed(1)}%)`).join(', ')
+  const destaques = top3.map(e => `${e.uf} (+${(e.taxa_crescimento || 0).toFixed(1)}%)`).join(', ')
 
   const primeiroParagrafo = `${regiaoStr} ${verbo} o crescimento da carteira ativa no período, com destaque para ${destaques}, todos acima da média nacional de ${crescimentoNacional}%.`
   const segundoParagrafo = gerarSegundoParagrafo(top3, maturidade, crescimentoNacional)

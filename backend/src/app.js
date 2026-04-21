@@ -1,3 +1,6 @@
+const path = require("path"); 
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+
 const express = require("express");
 const cors = require("cors");
 const indicadoresRoutes = require("./routes/indicadoresNacionais");
@@ -5,6 +8,7 @@ const kpisRoutes = require("./routes/indicadoresKPI");
 const indicadoresEstadosRoutes = require('./routes/indicadoresEstados');
 const indicadoresRegioesRoutes = require('./routes/indicadoresRegioes');
 const regioesCarteira = require('./routes/regioesCarteira')
+
 
 const app = express();
 

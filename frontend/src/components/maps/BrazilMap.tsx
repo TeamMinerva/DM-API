@@ -76,11 +76,11 @@ export default function BrazilMap({ estadosData }: BrazilMapProps) {
 
     const carteiraFmt = estado ? formatCarteira(Number(estado.carteira_ativa)) : 'N/A'
     const crescFmt = estado
-      ? `${estado.crescimento >= 0 ? '+' : ''}${estado.crescimento}%`
+      ? `${estado.taxa_crescimento >= 0 ? '+' : ''}${estado.taxa_crescimento}%`
       : 'N/A'
 
     layer.bindTooltip(
-      `<strong>${stateName} (${uf})</strong><br/>Carteira: ${carteiraFmt}<br/>Crescimento: ${crescFmt}`,
+      `<strong>${stateName} (${uf})</strong><br/>Carteira: ${carteiraFmt}<br/>Taxa de Crescimento: ${crescFmt}`,
       { sticky: true }
     )
   }

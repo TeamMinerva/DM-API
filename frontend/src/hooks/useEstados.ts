@@ -5,7 +5,7 @@ const API_BASE = 'http://localhost:3000'
 export interface EstadoData {
   uf: string
   carteira_ativa: number
-  crescimento: number
+  taxa_crescimento: number
 }
 
 interface EstadosState {
@@ -22,7 +22,7 @@ export function useEstados(): EstadosState {
   })
 
   useEffect(() => {
-    fetch(`${API_BASE}/estados`)
+    fetch(`${API_BASE}/carteira-ativa/ranking`)
       .then(res => {
         if (!res.ok) throw new Error('Erro ao buscar estados')
         return res.json()
