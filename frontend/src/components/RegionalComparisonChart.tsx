@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import axios from "axios";
 
-// Tipagem dos dados da API
+// Tipagem dos dados
 interface Indicador {
   regiao: string;
   taxa_ativo_problematico: number;
@@ -28,7 +28,7 @@ const RegionalComparisonChart: React.FC = () => {
       try {
         const response = await axios.get("/indicadores");
 
-        // 🔧 Normalização + correção "Note" → "Norte"
+        // 🔧 Corrige "Note" → "Norte"
         const normalized = response.data.map((item: Indicador) => ({
           ...item,
           regiao:
@@ -55,72 +55,59 @@ const RegionalComparisonChart: React.FC = () => {
     fetchData();
   }, []);
 
-  if (loading) return <p style={{ padding: 20 }}>Carregando...</p>;
-  if (error) return <p style={{ padding: 20 }}>{error}</p>;
+  if (loading) return <p className="chart-loading">Carregando...</p>;
+  if (error) return <p className="chart-error">{error}</p>;
 
   return (
-    <div style={styles.container}>
-      {/* Barra superior */}
-      <div style={styles.topBar} />
+    <div className="regional-chart">
+      <div className="regional-chart__topbar" />
 
-      {/* Header */}
-      <div style={styles.header}>
+      <div className="regional-chart__header">
         <div>
-          <h2 style={styles.title}>Inadimplência por Região</h2>
-          <p style={styles.subtitle}>
+          <h2 className="regional-chart__title">
+            Inadimplência por Região
+          </h2>
+          <p className="regional-chart__subtitle">
             Inadimplência e ativo problemático
           </p>
         </div>
 
-        {/* Avatar */}
         <img
           src="https://i.pravatar.cc/40"
           alt="avatar"
-          style={styles.avatar}
+          className="regional-chart__avatar"
         />
       </div>
 
-      {/* Chart */}
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} barGap={12}>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="#D9D4E7"
-            vertical={true}
+            vertical
+            className="regional-chart__grid"
           />
 
           <XAxis
             dataKey="regiao"
-            tick={{ fill: "#6B6B6B", fontSize: 12 }}
-            axisLine={false}
-            tickLine={false}
+            className="regional-chart__xaxis"
           />
 
           <YAxis
             domain={[0, 100]}
             tickFormatter={(v) => `${v}%`}
-            tick={{ fill: "#6B6B6B", fontSize: 12 }}
-            axisLine={false}
-            tickLine={false}
+            className="regional-chart__yaxis"
           />
 
           <Tooltip
             formatter={(value: number) => `${value}%`}
-            contentStyle={{
-              borderRadius: 8,
-              border: "none",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-            }}
           />
 
           <Legend
             verticalAlign="bottom"
             align="center"
             iconType="square"
-            wrapperStyle={{ paddingTop: 20, fontSize: 12 }}
           />
 
-          {/* Amarelo */}
           <Bar
             dataKey="taxa_inadimplencia"
             name="Inadimplência"
@@ -128,7 +115,6 @@ const RegionalComparisonChart: React.FC = () => {
             radius={[10, 10, 0, 0]}
           />
 
-          {/* Coral */}
           <Bar
             dataKey="taxa_ativo_problematico"
             name="Ativo Problemático"
@@ -142,48 +128,3 @@ const RegionalComparisonChart: React.FC = () => {
 };
 
 export default RegionalComparisonChart;
-
-// 🎨 Estilos no mesmo arquivo
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    backgroundColor: "#F4F1FA",
-    borderRadius: "18px",
-    padding: "24px",
-    position: "relative",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.05)",
-    width: "100%",
-  },
-  topBar: {
-    height: "6px",
-    backgroundColor: "#F3D46B",
-    borderTopLeftRadius: "18px",
-    borderTopRightRadius: "18px",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "20px",
-  },
-  title: {
-    margin: 0,
-    fontSize: "18px",
-    fontWeight: 600,
-    color: "#2F2F2F",
-  },
-  subtitle: {
-    margin: 0,
-    fontSize: "13px",
-    color: "#8A8A8A",
-  },
-  avatar: {
-    width: "38px",
-    height: "38px",
-    borderRadius: "50%",
-    border: "2px solid white",
-  },
-};
