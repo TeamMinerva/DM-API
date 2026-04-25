@@ -30,7 +30,7 @@ router.get('/carteira-ativa/ranking', async (req, res) => {
                 uf,
                 data_base,
                 carteira_ativa,
-                LAG(carteira_ativa) OVER(PARTITION BY uf ORDER BY data_base ASC) AS carteira_anterior,
+                FIRST_VALUE(carteira_ativa) OVER(PARTITION BY uf ORDER BY data_base ASC) AS carteira_anterior,
                 ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base DESC) AS ranking_recente
             FROM CarteiraPorMes
         )
@@ -48,21 +48,21 @@ router.get('/carteira-ativa/ranking', async (req, res) => {
         // No Postgres usamos await e os dados vêm em .rows
         const resultado = await db.query(query, [top]);
 
-    const resultados = resultado.rows.map(row => {
-        const atual = parseFloat(row.valor_atual) || 0;
-        const anterior = parseFloat(row.valor_anterior) || 0;
-        let crescimentoCalculado = 0;
+        const resultados = resultado.rows.map(row => {
+            const atual = parseFloat(row.valor_atual) || 0;
+            const anterior = parseFloat(row.valor_anterior) || 0;
+            let crescimentoCalculado = 0;
 
-        if (anterior > 0) {
-            crescimentoCalculado = ((atual - anterior) / anterior) * 100;
-        }
+            if (anterior > 0) {
+                crescimentoCalculado = ((atual - anterior) / anterior) * 100;
+            }
 
-        return {
-            uf: row.uf || "N/A",
-            carteira_ativa: Number(atual.toFixed(2)), 
-            taxa_crescimento: Number(crescimentoCalculado.toFixed(2))
-        };
-    });
+            return {
+                uf: row.uf || "N/A",
+                carteira_ativa: Number(atual.toFixed(2)),
+                taxa_crescimento: Number(crescimentoCalculado.toFixed(2))
+            };
+        });
 
         res.json(resultados);
 
