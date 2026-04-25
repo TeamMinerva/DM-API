@@ -70,6 +70,8 @@ def carregar_dados(filename):
                         for col in colunas_numericas
                     }
                 )
+                
+                dt = dt[dt["porte"] != "Indisponível"].reset_index(drop=True)
 
                 # vai agrupar pelo by= e depois somar os valores numéricos, o as_index=false faz com que os valores do by= não se tornem indices
                 df_agrupado = df.groupby(
@@ -80,8 +82,6 @@ def carregar_dados(filename):
 
     dt = pd.concat(dfs, ignore_index=True)
     del dfs
-
-    dt = dt[dt["porte"] != "Indisponível"].reset_index(drop=True)
 
     return dt
 
