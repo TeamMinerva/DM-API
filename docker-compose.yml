@@ -34,6 +34,7 @@ services:
       - ./backend/.env # Carrega o seu arquivo de variáveis de ambiente
     volumes:
       - ./backend:/app # Sincroniza o código para você não precisar rebuildar a cada mudança
+      - /app/node_modules # Evita que o node_modules do host sobrescreva o do contêiner
 
   frontend:
     build: ./frontend
