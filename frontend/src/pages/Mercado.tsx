@@ -1,20 +1,42 @@
-import Sidebar from "../components/Sidebar"
-import Topbar from "../components/Topbar"
+import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
+import RankingEstadosCard from "../components/RankingEstadosCard";
+import { useRankingEstados } from "../hooks/useRankingEstados";
 
 export default function Mercado() {
-  return (
-    <div className="flex min-h-screen bg-[#e9e9e9]">
-      <Sidebar />
-        <h1>Mercado: Página em construção.</h1>
+  const { data, loading, error } = useRankingEstados();
 
+  return (
+    <div className="flex min-h-screen bg-[#FBFCF8]">
+      <Sidebar />
 
       <div className="flex-1">
         <Topbar />
 
-        <main className="px-8 pb-8">
-          <div className="h-[500px] rounded-2xl bg-transparent" />
+        <main className="p-8">
+
+          <section className="mb-8">
+            <h1 className="text-4xl text-[#1E1E1E]">
+              Mercado de Crédito
+            </h1>
+
+            <p className="mt-4 text-[18px] text-[#7B7E86] font-medium">
+              Crescimento e concentração da carteira ativa por estado
+            </p>
+          </section>
+
+          {error && (
+            <p className="text-red-500">{error}</p>
+          )}
+
+          {loading ? (
+            <div>Carregando...</div>
+          ) : (
+            <RankingEstadosCard estados={data} />
+          )}
+
         </main>
       </div>
     </div>
-  )
+  );
 }
