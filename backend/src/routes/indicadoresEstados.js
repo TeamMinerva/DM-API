@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../database/connection');
 
 // Rota para listagem e crescimento dos estados
-router.get('/estados', (req, res) => {
+router.get('/estados', async (req, res) => {
     const query = `
         WITH CarteiraPorMes AS (
             SELECT 
@@ -32,11 +32,9 @@ router.get('/estados', (req, res) => {
         WHERE atual.ranking = 1;
     `;
 
-    db.all(query, [], (err, rows) => {
-        if (err) {
-            console.error("Erro ao consultar o banco de dados:", err);
-            return res.status(500).json({ error: "Erro interno ao buscar dados dos estados." });
-        }
+    try {
+        const result = await db.query(query);
+        const rows = result.rows || [];
 
         const resultados = rows.map(row => {
             const inicial = row.carteira_inicial;
@@ -55,11 +53,14 @@ router.get('/estados', (req, res) => {
         });
 
         res.json(resultados);
-    });
+    } catch (err) {
+        console.error("Erro ao consultar o banco de dados:", err);
+        res.status(500).json({ error: "Erro interno ao buscar dados dos estados." });
+    }
 });
 
 // Feature 1: Evolução da carteira ativa por estado (Gráfico de Linha)
-router.get('/carteira-ativa/evolucao', (req, res) => {
+router.get('/carteira-ativa/evolucao', async (req, res) => {
     const estadosQuery = req.query.estados;
 
     if (!estadosQuery) {
@@ -76,7 +77,8 @@ router.get('/carteira-ativa/evolucao', (req, res) => {
         });
     }
 
-    const placeholders = estados.map(() => '?').join(',');
+    // No Postgres, usamos $1, $2, $3...
+    const placeholders = estados.map((_, index) => `$${index + 1}`).join(',');
     const query = `
         SELECT 
             data_base, 
@@ -88,13 +90,13 @@ router.get('/carteira-ativa/evolucao', (req, res) => {
         ORDER BY data_base ASC, uf ASC;
     `;
 
-    db.all(query, estados, (err, rows) => {
-        if (err) {
-            console.error("Erro na evolução da carteira:", err);
-            return res.status(500).json({ error: "Erro interno ao buscar evolução." });
-        }
-        res.json(rows);
-    });
+    try {
+        const result = await db.query(query, estados);
+        res.json(result.rows || []);
+    } catch (err) {
+        console.error("Erro na evolução da carteira:", err);
+        res.status(500).json({ error: "Erro interno ao buscar evolução." });
+    }
 });
 
 module.exports = router;
