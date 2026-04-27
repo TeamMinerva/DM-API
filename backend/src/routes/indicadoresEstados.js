@@ -71,5 +71,44 @@ router.get('/carteira-ativa/ranking', async (req, res) => {
         res.status(500).json({ error: "Erro interno ao buscar ranking." });
     }
 });
+// Feature 1: Evolução da carteira ativa por estado (Gráfico de Linha)
+router.get('/carteira-ativa/evolucao', async (req, res) => {
+    const estadosQuery = req.query.estados;
+
+    if (!estadosQuery) {
+        return res.status(400).json({ 
+            error: "Parâmetro 'estados' é obrigatório. Exemplo: ?estados=SP,RJ" 
+        });
+    }
+
+    const estados = estadosQuery.split(',').map(e => e.trim().toUpperCase());
+
+    if (estados.length < 2 || estados.length > 3) {
+        return res.status(400).json({ 
+            error: "Envie no mínimo 2 e no máximo 3 estados." 
+        });
+    }
+
+    // No Postgres, usamos $1, $2, $3...
+    const placeholders = estados.map((_, index) => `$${index + 1}`).join(',');
+    const query = `
+        SELECT 
+            data_base, 
+            uf, 
+            SUM(carteira_ativa) AS carteira_ativa
+        FROM dados_bcb
+        WHERE uf IN (${placeholders})
+        GROUP BY data_base, uf
+        ORDER BY data_base ASC, uf ASC;
+    `;
+
+    try {
+        const result = await db.query(query, estados);
+        res.json(result.rows || []);
+    } catch (err) {
+        console.error("Erro na evolução da carteira:", err);
+        res.status(500).json({ error: "Erro interno ao buscar evolução." });
+    }
+});
 
 module.exports = router;
