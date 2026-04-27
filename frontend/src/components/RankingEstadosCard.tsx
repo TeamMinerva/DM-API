@@ -62,11 +62,21 @@ const RankingEstadosCard: React.FC<Props> = ({ estados, borderColor = "#6EE7E7" 
               {/* Coluna 1: Estado */}
               <div className="flex items-center gap-2 sm:gap-4">
                 <span className="text-[#8C8F99] font-medium text-xs sm:text-base w-3">{index + 1}</span>
+
+                {/* Badge da UF */}
                 <span className={`px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold border ${
                   isDestaque ? "bg-[#3354F4] text-white border-[#3354F4]" : "bg-transparent text-[#3354F4] border-[#3354F4]"
                 }`}>
                   {estado.uf}
                 </span>
+
+               {/* Nome do Estado - Agora visível e ao lado */}
+                <span className={`text-[13px] sm:text-[15px] truncate ${
+                isDestaque ? "text-[#3354F4] font-bold" : "text-[#8C8F99] font-medium"
+                 }`}>
+                {estadosNome[estado.uf] || estado.uf}
+               </span>
+               
                 <span className={`text-[13px] sm:text-[15px] truncate ${isDestaque ? "text-[#3354F4] font-bold" : "text-[#8C8F99] font-medium"}`}>
                   
                   <span className="hidden xs:inline">{estadosNome[estado.uf]}</span>
