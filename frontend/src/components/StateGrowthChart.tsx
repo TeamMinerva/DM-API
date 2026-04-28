@@ -32,8 +32,8 @@ interface Option {
 
 type Status = 'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR';
 
-// --- Constantes ---
-const api = axios.create({ baseURL: 'http://localhost:3000' });
+// --- Constantes e Auxiliares ---
+const api = axios.create({ baseURL: 'http://localhost:3000' }); // Ajuste a porta se necessário
 
 const ESTADOS_OPCOES: Option[] = [
   'AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG',
