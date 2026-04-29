@@ -1,9 +1,9 @@
 import React from "react";
-import type {RankingEstado}  from "../hooks/useRankingEstados";
+import type { RankingEstado } from "../hooks/useRankingEstados";
 
 interface Props {
   estados: RankingEstado[];
-  borderColor?: string; 
+  borderColor?: string;
 }
 
 const formatMoney = (valor: number) => {
@@ -13,7 +13,7 @@ const formatMoney = (valor: number) => {
   if (valor >= 1_000_000_000) {
     return `R$ ${(valor / 1_000_000_000).toFixed(1).replace(".", ",")}B`;
   }
-  return `R$ ${valor.toFixed(0)}`;
+  return `R$ ${valor.toLocaleString("pt-BR")}`;
 };
 
 const estadosNome: Record<string, string> = {
@@ -23,14 +23,28 @@ const estadosNome: Record<string, string> = {
 };
 
 const getCrescimentoStyle = (taxa: number) => {
-  if (taxa >= 9.0) return "bg-[#6EE7E7] text-white"; 
-  if (taxa >= 7.0) return "bg-[#6DE49D] text-white"; 
-  if (taxa >= 5.0) return "bg-[#FDE28A] text-white"; 
-  return "bg-[#FF9B9B] text-white"; 
+  if (taxa >= 9.0) return "bg-[#6EE7E7] text-white";
+  if (taxa >= 7.0) return "bg-[#6DE49D] text-white";
+  if (taxa >= 5.0) return "bg-[#FDE28A] text-white";
+  return "bg-[#FF9B9B] text-white";
 };
 
 const RankingEstadosCard: React.FC<Props> = ({ estados, borderColor = "#6EE7E7" }) => {
   const estadosDestaque = ["SP", "CE"];
+
+  if (!estados || estados.length === 0) {
+    return (
+      <div 
+        className="w-full bg-[#F1EFFF] rounded-[28px] p-8 shadow-sm flex items-center justify-center border-t-[6px]"
+        style={{ borderTopColor: borderColor }}
+      >
+        <p className="text-[#7B7E86] font-medium text-center">
+          Nenhum dado de ranking disponível no momento.
+        </p>
+      </div>
+    );
+  }
+  // ----------------------------------------------------------------
 
   return (
     <div 
@@ -68,8 +82,7 @@ const RankingEstadosCard: React.FC<Props> = ({ estados, borderColor = "#6EE7E7" 
                   {estado.uf}
                 </span>
                 <span className={`text-[13px] sm:text-[15px] truncate ${isDestaque ? "text-[#3354F4] font-bold" : "text-[#8C8F99] font-medium"}`}>
-                  
-                  <span className="hidden xs:inline">{estadosNome[estado.uf]}</span>
+                  <span className="hidden xs:inline">{estadosNome[estado.uf] || estado.uf}</span>
                 </span>
               </div>
 
@@ -81,7 +94,7 @@ const RankingEstadosCard: React.FC<Props> = ({ estados, borderColor = "#6EE7E7" 
               {/* Coluna 3: Badge */}
               <div className="flex justify-end">
                 <span className={`px-2 py-1 rounded-full text-[11px] sm:text-[13px] font-bold ${getCrescimentoStyle(estado.taxa_crescimento)}`}>
-                  +{estado.taxa_crescimento.toFixed(1).replace(".", ",")}%
+                  {estado.taxa_crescimento >= 0 ? "+" : ""}{estado.taxa_crescimento.toFixed(1).replace(".", ",")}%
                 </span>
               </div>
             </div>
@@ -91,4 +104,5 @@ const RankingEstadosCard: React.FC<Props> = ({ estados, borderColor = "#6EE7E7" 
     </div>
   );
 };
+
 export default RankingEstadosCard;

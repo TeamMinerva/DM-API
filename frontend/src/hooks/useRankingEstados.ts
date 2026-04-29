@@ -29,7 +29,7 @@ export function useRankingEstados(): RankingState {
       })
       .then((data) =>
         setState({
-          data,
+          data: Array.isArray(data) ? data : [],
           loading: false,
           error: null,
         })
