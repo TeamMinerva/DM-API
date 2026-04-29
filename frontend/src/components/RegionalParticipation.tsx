@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCarteira } from '../hooks/useCarteira';
 
 interface RegionData {
   label: string;
@@ -6,23 +7,28 @@ interface RegionData {
   color: string;
 }
 
-const MOCK_DATA: RegionData[] = [
-  { label: 'Sudeste',      pct: 58, color: '#1D1DD4' },
-  { label: 'Sul',          pct: 16, color: '#7DF4ED' },
-  { label: 'Nordeste',     pct: 12, color: '#FFE473' },
-  { label: 'Norte',        pct:  9, color: '#68E699' },
-  { label: 'Centro-Oeste', pct:  5, color: '#FF928A' },
-];
-
 interface RegionalParticipationCardProps {
   data?: RegionData[];
   loading?: boolean;
 }
 
+const dadosCarteira = () => {
+  const carteira = useCarteira()
+  const dados: RegionData[] = [
+    { label: 'Sudeste',      pct: carteira['Sudeste'], color: '#1D1DD4' },
+    { label: 'Sul',          pct: carteira['Sul'], color: '#7DF4ED' },
+    { label: 'Nordeste',     pct: carteira['Nordeste'], color: '#FFE473' },
+    { label: 'Norte',        pct: carteira['Norte'], color: '#68E699' },
+    { label: 'Centro-Oeste', pct: carteira['Centro-Oeste'], color: '#FF928A' },
+  ];
+
+  return dados  
+}
+
 const RegionalParticipationCard: React.FC<RegionalParticipationCardProps> = ({
-  data = MOCK_DATA,
+  data = dadosCarteira(),
   loading = false,
-}) => {
+}) => { 
   return (
     <div
       className={`w-full bg-[#F1EFFF] rounded-[20px] p-5 font-[Catamaran] transition-opacity duration-500 ${loading ? 'opacity-40' : 'opacity-100'}`}
