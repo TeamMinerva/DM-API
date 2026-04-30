@@ -23,10 +23,10 @@ const estadosNome: Record<string, string> = {
 };
 
 const getCrescimentoStyle = (taxa: number) => {
-  if (taxa >= 9.0) return "bg-[#6EE7E7] text-white"; 
-  if (taxa >= 7.0) return "bg-[#6DE49D] text-white"; 
-  if (taxa >= 5.0) return "bg-[#FDE28A] text-white"; 
-  return "bg-[#FF9B9B] text-white"; 
+  if (taxa >= 9.0) return "bg-[#7DF4ED] text-white"; 
+  if (taxa >= 7.0) return "bg-[#68E699] text-white"; 
+  if (taxa >= 5.0) return "bg-[#FFE473] text-white"; 
+  return "bg-[#FF928A] text-white"; 
 };
 
 const RankingEstadosCard: React.FC<Props> = ({ estados, borderColor = "#6EE7E7" }) => {
