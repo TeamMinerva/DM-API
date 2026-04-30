@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -9,120 +9,129 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import axios from "axios";
-
-// Tipagem dos dados
-interface Indicador {
-  regiao: string;
-  taxa_ativo_problematico: number;
-  taxa_inadimplencia: number;
-}
+import { useIndicadoresRegioes } from "../hooks/useIndicadoresRegioes";
 
 const RegionalComparisonChart: React.FC = () => {
-  const [data, setData] = useState<Indicador[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, loading, error } = useIndicadoresRegioes();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/indicadores");
+  if (loading) {
+    return (
+      <div
+        className="w-full bg-[#F1EFFF] rounded-[20px] p-6 font-[Catamaran]"
+        style={{ borderTop: "5px solid #FFE473" }}
+      >
+        <p className="text-sm font-semibold text-[#7B7E86]">Carregando...</p>
+      </div>
+    );
+  }
 
-        // 🔧 Corrige "Note" → "Norte"
-        const normalized = response.data.map((item: Indicador) => ({
-          ...item,
-          regiao:
-            item.regiao.toLowerCase() === "note"
-              ? "Norte"
-              : item.regiao,
-        }));
-
-        // 🔧 Ordem correta das regiões
-        const order = ["Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"];
-        normalized.sort(
-          (a: Indicador, b: Indicador) =>
-            order.indexOf(a.regiao) - order.indexOf(b.regiao)
-        );
-
-        setData(normalized);
-      } catch (err) {
-        setError("Erro ao carregar os dados.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) return <p className="chart-loading">Carregando...</p>;
-  if (error) return <p className="chart-error">{error}</p>;
+  if (error) {
+    return (
+      <div
+        className="w-full bg-[#F1EFFF] rounded-[20px] p-6 font-[Catamaran]"
+        style={{ borderTop: "5px solid #FFE473" }}
+      >
+        <p className="text-sm font-semibold text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="regional-chart">
-      <div className="regional-chart__topbar" />
+    <div
+      className="w-full bg-[#F1EFFF] rounded-[20px] p-6 font-[Catamaran]"
+      style={{ borderTop: "5px solid #FFE473" }}
+    >
+      {/* Cabeçalho */}
+      <div className="mb-5">
+        <h2 className="text-lg font-semibold text-[#7B7E86]">
+          Inadimplência por Região
+        </h2>
 
-      <div className="regional-chart__header">
-        <div>
-          <h2 className="regional-chart__title">
-            Inadimplência por Região
-          </h2>
-          <p className="regional-chart__subtitle">
-            Inadimplência e ativo problemático
-          </p>
-        </div>
-
-        <img
-          src="https://i.pravatar.cc/40"
-          alt="avatar"
-          className="regional-chart__avatar"
-        />
+        <p className="text-sm font-semibold text-[#7B7E86] mt-1">
+          Inadimplência e ativo problemático
+        </p>
       </div>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} barGap={12}>
-          <CartesianGrid
-            strokeDasharray="3 3"
-            vertical
-            className="regional-chart__grid"
-          />
+      {/* Gráfico */}
+      <div className="h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={data}
+            barGap={12}
+            barCategoryGap="24%"
+            margin={{ top: 10, right: 14, left: -15, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical
+              stroke="#DCD9EF"
+            />
 
-          <XAxis
-            dataKey="regiao"
-            className="regional-chart__xaxis"
-          />
+            <XAxis
+              dataKey="regiao"
+              axisLine={{ stroke: "#7B7E86" }}
+              tickLine={false}
+              tick={{
+                fontSize: 12,
+                fill: "#6F717A",
+              }}
+            />
 
-          <YAxis
-            domain={[0, 100]}
-            tickFormatter={(v) => `${v}%`}
-            className="regional-chart__yaxis"
-          />
+            <YAxis
+              domain={[0, 10]}
+              tickFormatter={(value) => `${value}`}
+              axisLine={false}
+              tickLine={false}
+              tick={{
+                fontSize: 12,
+                fill: "#6F717A",
+              }}
+              width={40}
+            />
 
-          <Tooltip
-            formatter={(value: number) => `${value}%`}
-          />
+            <Tooltip
+              formatter={(value: number) => [`${value}%`, ""]}
+              contentStyle={{
+                borderRadius: "12px",
+                border: "none",
+                fontSize: "13px",
+                color: "#7B7E86",
+              }}
+              cursor={{
+                fill: "rgba(255, 255, 255, 0.25)",
+              }}
+            />
 
-          <Legend
-            verticalAlign="bottom"
-            align="center"
-            iconType="square"
-          />
+            <Legend
+              verticalAlign="bottom"
+              align="center"
+              iconType="square"
+              iconSize={10}
+              wrapperStyle={{
+                fontSize: "13px",
+                color: "#7B7E86",
+                paddingTop: "12px",
+              }}
+            />
 
-          <Bar
-            dataKey="taxa_inadimplencia"
-            name="Inadimplência"
-            fill="#F3D46B"
-            radius={[10, 10, 0, 0]}
-          />
+            <Bar
+              dataKey="taxa_inadimplencia"
+              name="Inadimplência"
+              fill="#FFE473"
+              radius={[24, 24, 0, 0]}
+              maxBarSize={62}
+            />
 
-          <Bar
-            dataKey="taxa_ativo_problematico"
-            name="Ativo Problemático"
-            fill="#F28B82"
-            radius={[10, 10, 0, 0]}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+            <Bar
+              dataKey="taxa_ativo_problematico"
+              name="Ativo Problemático"
+              fill="#FF8A84"
+              radius={[24, 24, 0, 0]}
+              maxBarSize={62}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };
