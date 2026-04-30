@@ -92,8 +92,8 @@ export const InadimplenciaHeatmap = ({
 
   return (
     <div
-      className="bg-[#F1EFFF] p-6 rounded-3xl w-full overflow-hidden"
-      style={{ borderTop: `6px solid ${borderColor}` }}
+      className="bg-[#F1EFFF] p-6 rounded-[20px] w-full overflow-hidden"
+      style={{ borderTop: `5px solid ${borderColor}` }}
     >
       {/* ── Header ── */}
       <div className="flex justify-between items-start mb-8 gap-4">
@@ -111,11 +111,11 @@ export const InadimplenciaHeatmap = ({
               key={op}
               onClick={() => onFiltroChange(op)}
               className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all duration-150
-                                ${
-                                  filtro === op
-                                    ? "bg-[#2563EB] text-white shadow-sm"
-                                    : "text-[#2563EB] hover:bg-gray-100"
-                                }`}
+                ${
+                  filtro === op
+                    ? "bg-[#2563EB] text-white shadow-sm"
+                    : "text-[#2563EB] hover:bg-gray-100"
+                }`}
             >
               {op}
             </button>
@@ -141,15 +141,15 @@ export const InadimplenciaHeatmap = ({
       {!loading && !error && (
         <div
           className="
-                        overflow-x-auto pb-3
-                        [&::-webkit-scrollbar]:h-2
-                        [&::-webkit-scrollbar-track]:bg-transparent
-                        [&::-webkit-scrollbar-thumb]:rounded-full
-                        [&::-webkit-scrollbar-thumb]:bg-[#D8D6F0]
-                        hover:[&::-webkit-scrollbar-thumb]:bg-[#BEBBE4]
-                        [scrollbar-width:thin]
-                        [scrollbar-color:#D8D6F0_transparent]
-                    "
+            overflow-x-auto pb-3
+            [&::-webkit-scrollbar]:h-2
+            [&::-webkit-scrollbar-track]:bg-transparent
+            [&::-webkit-scrollbar-thumb]:rounded-full
+            [&::-webkit-scrollbar-thumb]:bg-[#D8D6F0]
+            hover:[&::-webkit-scrollbar-thumb]:bg-[#BEBBE4]
+            [scrollbar-width:thin]
+            [scrollbar-color:#D8D6F0_transparent]
+          "
         >
           <div className="min-w-[2200px]">
             {/* Cabeçalho — UFs */}
@@ -161,21 +161,21 @@ export const InadimplenciaHeatmap = ({
             >
               <div
                 className="
-                                    sticky left-0 z-40
-                                    h-5
-                                    bg-[#F1EFFF]
-                                    shadow-[10px_0_0_#F1EFFF]
-                                "
+                  sticky left-0 z-40
+                  h-5
+                  bg-[#F1EFFF]
+                  shadow-[10px_0_0_#F1EFFF]
+                "
               />
 
               {UFS.map((uf) => (
                 <div
                   key={uf}
                   className="
-                                        relative z-0
-                                        text-center text-[11px] font-semibold
-                                        text-gray-400 uppercase tracking-wider whitespace-nowrap
-                                    "
+                    relative z-0
+                    text-center text-[11px] font-semibold
+                    text-gray-400 uppercase tracking-wider whitespace-nowrap
+                  "
                 >
                   {uf}
                 </div>
@@ -194,14 +194,14 @@ export const InadimplenciaHeatmap = ({
                 >
                   <div
                     className="
-                                            sticky left-0 z-40
-                                            h-11
-                                            flex items-center
-                                            bg-[#F1EFFF]
-                                            pr-3
-                                            text-[12px] font-medium text-gray-500 leading-tight whitespace-nowrap
-                                            shadow-[10px_0_0_#F1EFFF]
-                                        "
+                      sticky left-0 z-40
+                      h-11
+                      flex items-center
+                      bg-[#F1EFFF]
+                      pr-3
+                      text-[12px] font-medium text-gray-500 leading-tight whitespace-nowrap
+                      shadow-[10px_0_0_#F1EFFF]
+                    "
                   >
                     {porte}
                   </div>
@@ -218,12 +218,12 @@ export const InadimplenciaHeatmap = ({
                             : `${uf} | ${porte}: sem dado`
                         }
                         className={`
-                                                    relative z-0
-                                                    h-11 rounded-xl flex items-center justify-center
-                                                    font-bold text-[11px] transition-transform duration-100
-                                                    hover:scale-105 cursor-default select-none whitespace-nowrap
-                                                    ${getCellStyle(taxa)}
-                                                `}
+                          relative z-0
+                          h-11 rounded-xl flex items-center justify-center
+                          font-bold text-[11px] transition-transform duration-100
+                          hover:scale-105 cursor-default select-none whitespace-nowrap
+                          ${getCellStyle(taxa)}
+                        `}
                       >
                         {taxa !== undefined ? `+${taxa.toFixed(1)}%` : ""}
                       </div>
