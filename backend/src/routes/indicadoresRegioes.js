@@ -11,7 +11,13 @@ router.get('/indicadores', async (req, res) => {
             SELECT MAX(data_base) as max_data FROM dados_bcb
         )
         SELECT 
-            regiao,
+            CASE
+                WHEN uf IN ('SP', 'RJ', 'MG', 'ES') THEN 'Sudeste'
+                WHEN uf IN ('PR', 'SC', 'RS') THEN 'Sul'
+                WHEN uf IN ('DF', 'GO', 'MT', 'MS') THEN 'Centro-Oeste'
+                WHEN uf IN ('BA', 'SE', 'AL', 'PE', 'PB', 'RN', 'PI', 'CE', 'MA') THEN 'Nordeste'
+                WHEN uf IN ('AM', 'RR', 'AP', 'PA', 'TO', 'AC', 'RO') THEN 'Norte'
+            END AS regiao,
             (SUM(ativo_problematico) * 100.0 / NULLIF(SUM(carteira_ativa), 0)) AS taxa_ativo_problematico,
             (SUM(carteira_inadimplencia) * 100.0 / NULLIF(SUM(carteira_ativa), 0)) AS taxa_inadimplencia
         FROM dados_bcb
