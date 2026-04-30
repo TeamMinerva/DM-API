@@ -33,7 +33,8 @@ interface Option {
 type Status = 'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR';
 
 // --- Constantes e Auxiliares ---
-const api = axios.create({ baseURL: 'http://localhost:3000' }); // Ajuste a porta se necessário
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
+const api = axios.create({ baseURL: API_BASE_URL });
 
 const ESTADOS_OPCOES: Option[] = [
   'AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG',
@@ -62,8 +63,18 @@ const formatCurrency = (value: number) =>
 const formatYAxis = (value: number) =>
   `${(value / 1_000_000_000).toFixed(0)}`;
 
+const parseDataBase = (dateStr: string) => {
+  if (/^\d{4}-\d{2}$/.test(dateStr)) {
+    return new Date(`${dateStr}-02T00:00:00`);
+  }
+
+  return new Date(dateStr);
+};
+
 const formatDateLabel = (dateStr: string) => {
-  const date = new Date(dateStr + '-02');
+  const date = parseDataBase(dateStr);
+  if (Number.isNaN(date.getTime())) return dateStr;
+
   return date.toLocaleDateString('pt-BR', { month: 'short' })
     .replace('.', '')
     .replace(/^\w/, c => c.toUpperCase());
@@ -71,8 +82,10 @@ const formatDateLabel = (dateStr: string) => {
 
 const getPeriodTitle = (data: PivotData[]) => {
   if (data.length === 0) return '';
-  const first = new Date(data[0].data_base + '-02');
-  const last  = new Date(data[data.length - 1].data_base + '-02');
+  const first = parseDataBase(data[0].data_base);
+  const last  = parseDataBase(data[data.length - 1].data_base);
+  if (Number.isNaN(first.getTime()) || Number.isNaN(last.getTime())) return '';
+
   const fmt = (d: Date) =>
     d.toLocaleDateString('pt-BR', { month: 'short' })
       .replace('.', '')
@@ -216,7 +229,7 @@ export default function StateGrowthChart() {
               />
               <Tooltip
                 formatter={(value: number) => [formatCurrency(value), 'Carteira Ativa']}
-                labelFormatter={(label) => `Período: ${label}`}
+                labelFormatter={(label) => `Período: ${formatDateLabel(String(label))}`}
                 contentStyle={{ borderRadius: '12px', border: 'none', fontSize: '13px' }}
               />
               <Legend

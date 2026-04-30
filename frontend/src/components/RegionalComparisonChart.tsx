@@ -11,6 +11,8 @@ import {
 } from "recharts";
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+
 // Tipagem dos dados
 interface Indicador {
   regiao: string;
@@ -26,7 +28,7 @@ const RegionalComparisonChart: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/indicadores");
+        const response = await axios.get(`${API_BASE_URL}/regioes/indicadores`);
 
         // 🔧 Corrige "Note" → "Norte"
         const normalized = response.data.map((item: Indicador) => ({
