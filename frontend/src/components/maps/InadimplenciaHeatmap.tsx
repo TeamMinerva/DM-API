@@ -1,7 +1,7 @@
 export interface DataItem {
   uf: string;
   porte: string;
-  taxa: number;
+  taxa: number | null;
   tipo: "PF" | "PJ";
 }
 
@@ -45,17 +45,40 @@ const UFS = [
 ];
 
 const PORTES_PF = [
-  "Sem rendimento",
-  "Até 1 SM",
-  "Mais de 1 a 2 SM",
-  "Mais de 2 a 3 SM",
-  "Mais de 3 a 5 SM",
-  "Mais de 5 a 10 SM",
-  "Mais de 10 a 20 SM",
-  "Acima de 20 SM",
+  { label: "Sem rendimento", value: "Sem rendimento" },
+  { label: "Até 1 SM", value: "Até 1 salário mínimo" },
+  {
+    label: "Mais de 1 a 2 SM",
+    value: "Mais de 1 a 2 salários mínimos",
+  },
+  {
+    label: "Mais de 2 a 3 SM",
+    value: "Mais de 2 a 3 salários mínimos",
+  },
+  {
+    label: "Mais de 3 a 5 SM",
+    value: "Mais de 3 a 5 salários mínimos",
+  },
+  {
+    label: "Mais de 5 a 10 SM",
+    value: "Mais de 5 a 10 salários mínimos",
+  },
+  {
+    label: "Mais de 10 a 20 SM",
+    value: "Mais de 10 a 20 salários mínimos",
+  },
+  {
+    label: "Acima de 20 SM",
+    value: "Acima de 20 salários mínimos",
+  },
 ];
 
-const PORTES_PJ = ["Micro", "Pequeno", "Médio", "Grande"];
+const PORTES_PJ = [
+  { label: "Micro", value: "Micro" },
+  { label: "Pequeno", value: "Pequeno" },
+  { label: "Médio", value: "Médio" },
+  { label: "Grande", value: "Grande" },
+];
 
 const LEGEND_COLORS = [
   "#B3F0CB",
@@ -76,8 +99,8 @@ export const InadimplenciaHeatmap = ({
 }: Props) => {
   const portes = filtro === "PF" ? PORTES_PF : PORTES_PJ;
 
-  const getCellStyle = (taxa: number | undefined): string => {
-    if (taxa === undefined) return "bg-gray-100 text-gray-300";
+  const getCellStyle = (taxa: number | null | undefined): string => {
+    if (taxa === undefined || taxa === null) return "bg-gray-100 text-gray-300";
     if (taxa <= 2.0) return "bg-[#B3F0CB] text-white";
     if (taxa <= 3.8) return "bg-[#68E699] text-white";
     if (taxa <= 5.8) return "bg-[#FFF1B4] text-white";
@@ -86,7 +109,7 @@ export const InadimplenciaHeatmap = ({
     return "bg-[#FF928A] text-white";
   };
 
-  const getTaxaValue = (uf: string, porte: string): number | undefined =>
+  const getTaxaValue = (uf: string, porte: string): number | null | undefined =>
     data.find((d) => d.uf === uf && d.porte === porte && d.tipo === filtro)
       ?.taxa;
 
@@ -95,20 +118,19 @@ export const InadimplenciaHeatmap = ({
       className="bg-[#F1EFFF] p-6 rounded-[20px] w-full overflow-hidden"
       style={{ borderTop: `5px solid ${borderColor}` }}
     >
-      {/* ── Header ── */}
       <div className="flex justify-between items-start mb-8 gap-4">
         <div>
           <h3 className="text-[#7B7E86] font-semibold text-lg leading-snug">
-            Mapa de Calor — Inadimplência
+            Mapa de Calor - Inadimplência
           </h3>
-          <p className="text-[#7B7E86] text-sm mt-1">UF × Porte do Cliente</p>
+          <p className="text-[#7B7E86] text-sm mt-1">UF x Porte do Cliente</p>
         </div>
 
-        {/* Toggle PF / PJ */}
         <div className="flex bg-white p-1 rounded-full border border-gray-200 gap-1 shrink-0">
           {(["PF", "PJ"] as const).map((op) => (
             <button
               key={op}
+              type="button"
               onClick={() => onFiltroChange(op)}
               className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all duration-150
                 ${
@@ -123,24 +145,16 @@ export const InadimplenciaHeatmap = ({
         </div>
       </div>
 
-      {/* ── Loading ── */}
-      {loading && (
-        <div className="flex items-center justify-center h-40 text-sm text-gray-400">
-          Carregando dados...
-        </div>
-      )}
-
-      {/* ── Erro ── */}
       {error && !loading && (
         <div className="flex items-center justify-center h-40 text-sm text-red-400">
           {error}
         </div>
       )}
 
-      {/* ── Matriz ── */}
-      {!loading && !error && (
+      {!error && (
         <div
           className="
+            relative
             overflow-x-auto pb-3
             [&::-webkit-scrollbar]:h-2
             [&::-webkit-scrollbar-track]:bg-transparent
@@ -151,12 +165,11 @@ export const InadimplenciaHeatmap = ({
             [scrollbar-color:#D8D6F0_transparent]
           "
         >
-          <div className="min-w-[2200px]">
-            {/* Cabeçalho — UFs */}
+          <div className="min-w-[760px]">
             <div
               className="grid gap-3 mb-4"
               style={{
-                gridTemplateColumns: `180px repeat(${UFS.length}, minmax(58px, 1fr))`,
+                gridTemplateColumns: `80px repeat(${portes.length}, minmax(120px, 1fr))`,
               }}
             >
               <div
@@ -168,28 +181,27 @@ export const InadimplenciaHeatmap = ({
                 "
               />
 
-              {UFS.map((uf) => (
+              {portes.map((porte) => (
                 <div
-                  key={uf}
+                  key={porte.value}
                   className="
                     relative z-0
                     text-center text-[11px] font-semibold
                     text-gray-400 uppercase tracking-wider whitespace-nowrap
                   "
                 >
-                  {uf}
+                  {porte.label}
                 </div>
               ))}
             </div>
 
-            {/* Linhas — Portes */}
             <div className="space-y-3">
-              {portes.map((porte) => (
+              {UFS.map((uf) => (
                 <div
-                  key={porte}
+                  key={uf}
                   className="grid gap-3 items-center"
                   style={{
-                    gridTemplateColumns: `180px repeat(${UFS.length}, minmax(58px, 1fr))`,
+                    gridTemplateColumns: `80px repeat(${portes.length}, minmax(120px, 1fr))`,
                   }}
                 >
                   <div
@@ -203,19 +215,20 @@ export const InadimplenciaHeatmap = ({
                       shadow-[10px_0_0_#F1EFFF]
                     "
                   >
-                    {porte}
+                    {uf}
                   </div>
 
-                  {UFS.map((uf) => {
-                    const taxa = getTaxaValue(uf, porte);
+                  {portes.map((porte) => {
+                    const taxa = getTaxaValue(uf, porte.value);
+                    const hasTaxa = taxa !== undefined && taxa !== null;
 
                     return (
                       <div
-                        key={`${uf}-${porte}`}
+                        key={`${uf}-${porte.value}`}
                         title={
-                          taxa !== undefined
-                            ? `${uf} | ${porte}: ${taxa.toFixed(1)}%`
-                            : `${uf} | ${porte}: sem dado`
+                          hasTaxa
+                            ? `${uf} | ${porte.label}: ${taxa.toFixed(1)}%`
+                            : `${uf} | ${porte.label}: sem dado`
                         }
                         className={`
                           relative z-0
@@ -225,7 +238,7 @@ export const InadimplenciaHeatmap = ({
                           ${getCellStyle(taxa)}
                         `}
                       >
-                        {taxa !== undefined ? `+${taxa.toFixed(1)}%` : ""}
+                        {hasTaxa ? `${taxa.toFixed(1)}%` : ""}
                       </div>
                     );
                   })}
@@ -233,11 +246,16 @@ export const InadimplenciaHeatmap = ({
               ))}
             </div>
           </div>
+
+          {loading && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center rounded-[20px] bg-[#F1EFFF]/70 text-sm text-gray-500">
+              Carregando dados...
+            </div>
+          )}
         </div>
       )}
 
-      {/* ── Legenda ── */}
-      {!loading && !error && (
+      {!error && (
         <div className="mt-8 flex items-center gap-3 text-xs font-semibold text-gray-400">
           <span>Baixo</span>
 

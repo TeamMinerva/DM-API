@@ -5,10 +5,16 @@ import KpiCard from "../components/KpiCard"
 import { InadimplenciaHeatmap } from "../components/maps/InadimplenciaHeatmap"
 import RegionalComparisonChart from "../components/RegionalComparisonChart"
 import { useRiscoKpis } from "../hooks/useRiscoKpis"
+import { useInadimplenciaHeatmap } from "../hooks/useInadimplenciaHeatmap"
 
 export default function Risco() {
   const [filtro, setFiltro] = useState<'PF' | 'PJ'>('PF')
   const { data, loading, error } = useRiscoKpis()
+  const {
+    data: heatmapData,
+    loading: heatmapLoading,
+    error: heatmapError,
+  } = useInadimplenciaHeatmap(filtro)
 
   const kpis = {
     inadimplenciaMedia: data?.inadimplenciaMedia ?? '0%',
@@ -73,11 +79,11 @@ export default function Risco() {
 
             <div className="transition-all duration-300 ease-in-out">
               <InadimplenciaHeatmap
-                data={[]}
+                data={heatmapData}
                 filtro={filtro}
                 onFiltroChange={setFiltro}
-                loading={false}
-                error={null}
+                loading={heatmapLoading}
+                error={heatmapError}
                 borderColor="#6EE7E7"
               />
             </div>
