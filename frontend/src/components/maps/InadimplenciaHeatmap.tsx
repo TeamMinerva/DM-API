@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export interface DataItem {
   uf: string;
   porte: string;
@@ -75,6 +77,11 @@ export const InadimplenciaHeatmap = ({
   borderColor = "#6EE7E7",
 }: Props) => {
   const portes = filtro === "PF" ? PORTES_PF : PORTES_PJ;
+  const [tooltip, setTooltip] = useState<{
+    x: number;
+    y: number;
+    label: string;
+  } | null>(null);
 
   const getCellStyle = (taxa: number | null | undefined): string => {
     if (taxa === undefined || taxa === null) return "bg-gray-100 text-gray-300";
@@ -208,11 +215,27 @@ export const InadimplenciaHeatmap = ({
                     return (
                       <div
                         key={`${uf}-${porte}`}
-                        title={
-                          hasTaxa
-                            ? `${uf} | ${porte}: ${taxa.toFixed(1)}%`
-                            : `${uf} | ${porte}: sem dado`
+                        onMouseEnter={(event) =>
+                          setTooltip({
+                            x: event.clientX,
+                            y: event.clientY,
+                            label: hasTaxa
+                              ? `${uf} | ${porte}: ${taxa.toFixed(1)}%`
+                              : `${uf} | ${porte}: sem dado`,
+                          })
                         }
+                        onMouseMove={(event) =>
+                          setTooltip((current) =>
+                            current
+                              ? {
+                                  ...current,
+                                  x: event.clientX,
+                                  y: event.clientY,
+                                }
+                              : current
+                          )
+                        }
+                        onMouseLeave={() => setTooltip(null)}
                         className={`
                           relative z-0
                           h-11 rounded-xl flex items-center justify-center
@@ -235,6 +258,18 @@ export const InadimplenciaHeatmap = ({
               Carregando dados...
             </div>
           )}
+        </div>
+      )}
+
+      {tooltip && (
+        <div
+          className="pointer-events-none fixed z-[9999] rounded-xl bg-white px-3 py-2 text-xs font-semibold text-[#7B7E86] shadow-lg"
+          style={{
+            left: tooltip.x + 12,
+            top: tooltip.y + 12,
+          }}
+        >
+          {tooltip.label}
         </div>
       )}
 

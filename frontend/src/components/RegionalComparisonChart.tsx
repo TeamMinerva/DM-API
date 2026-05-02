@@ -13,12 +13,14 @@ import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
-// Tipagem dos dados
 interface Indicador {
   regiao: string;
   taxa_ativo_problematico: number;
   taxa_inadimplencia: number;
 }
+
+const chartContainerClass =
+  "w-full bg-[#F1EFFF] rounded-[20px] p-6 font-[Catamaran]";
 
 const RegionalComparisonChart: React.FC = () => {
   const [data, setData] = useState<Indicador[]>([]);
@@ -30,16 +32,11 @@ const RegionalComparisonChart: React.FC = () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/regioes/indicadores`);
 
-        // 🔧 Corrige "Note" → "Norte"
         const normalized = response.data.map((item: Indicador) => ({
           ...item,
-          regiao:
-            item.regiao.toLowerCase() === "note"
-              ? "Norte"
-              : item.regiao,
+          regiao: item.regiao.toLowerCase() === "note" ? "Norte" : item.regiao,
         }));
 
-        // 🔧 Ordem correta das regiões
         const order = ["Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"];
         normalized.sort(
           (a: Indicador, b: Indicador) =>
@@ -57,74 +54,104 @@ const RegionalComparisonChart: React.FC = () => {
     fetchData();
   }, []);
 
-  if (loading) return <p className="chart-loading">Carregando...</p>;
-  if (error) return <p className="chart-error">{error}</p>;
+  if (loading) {
+    return (
+      <div
+        className={chartContainerClass}
+        style={{ borderTop: "5px solid #FF928A" }}
+      >
+        <p className="text-sm text-[#7B7E86]">Carregando dados...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        className={chartContainerClass}
+        style={{ borderTop: "5px solid #FF928A" }}
+      >
+        <p className="text-sm text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="regional-chart">
-      <div className="regional-chart__topbar" />
-
-      <div className="regional-chart__header">
-        <div>
-          <h2 className="regional-chart__title">
-            Inadimplência por Região
-          </h2>
-          <p className="regional-chart__subtitle">
-            Inadimplência e ativo problemático
-          </p>
-        </div>
-
-        <img
-          src="https://i.pravatar.cc/40"
-          alt="avatar"
-          className="regional-chart__avatar"
-        />
+    <div
+      className={chartContainerClass}
+      style={{ borderTop: "5px solid #FF928A" }}
+    >
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-[#7B7E86]">
+          Inadimplencia por Regiao
+        </h2>
+        <p className="mt-1 text-sm font-semibold text-[#7B7E86]">
+          Inadimplencia e ativo problematico
+        </p>
       </div>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} barGap={12}>
-          <CartesianGrid
-            strokeDasharray="3 3"
-            vertical
-            className="regional-chart__grid"
-          />
+      <div className="h-72">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={data}
+            barGap={12}
+            margin={{ top: 5, right: 20, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#E2E2EA"
+            />
 
-          <XAxis
-            dataKey="regiao"
-            className="regional-chart__xaxis"
-          />
+            <XAxis
+              dataKey="regiao"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: "#7B7E86" }}
+            />
 
-          <YAxis
-            domain={[0, 100]}
-            tickFormatter={(v) => `${v}%`}
-            className="regional-chart__yaxis"
-          />
+            <YAxis
+              domain={[0, 10]}
+              tickFormatter={(v) => `${v}%`}
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: "#7B7E86" }}
+              width={34}
+            />
 
-          <Tooltip
-            formatter={(value: number) => `${value}%`}
-          />
+            <Tooltip
+              formatter={(value: number) => `${value}%`}
+              contentStyle={{
+                borderRadius: "12px",
+                border: "none",
+                fontSize: "13px",
+              }}
+            />
 
-          <Legend
-            verticalAlign="bottom"
-            align="center"
-            iconType="square"
-          />
+            <Legend
+              verticalAlign="bottom"
+              align="center"
+              iconType="square"
+              iconSize={8}
+              wrapperStyle={{ fontSize: "13px", paddingTop: "12px" }}
+            />
 
-          <Bar
-            dataKey="taxa_inadimplencia"
-            name="Inadimplência"
-            fill="#F3D46B"
-            radius={[10, 10, 0, 0]}
-          />
+            <Bar
+              dataKey="taxa_inadimplencia"
+              name="Inadimplencia"
+              fill="#FFE473"
+              radius={[10, 10, 0, 0]}
+            />
 
-          <Bar
-            dataKey="taxa_ativo_problematico"
-            name="Ativo Problemático"
-            fill="#F28B82"
-            radius={[10, 10, 0, 0]}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+            <Bar
+              dataKey="taxa_ativo_problematico"
+              name="Ativo Problematico"
+              fill="#FF928A"
+              radius={[10, 10, 0, 0]}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };

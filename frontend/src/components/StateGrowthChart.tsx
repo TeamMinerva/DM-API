@@ -57,11 +57,35 @@ const REGIAO_CORES: Record<string, string> = {
 };
 
 // --- Formatação ---
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+const COMPACT_SUFFIXES = [
+  { value: 1_000_000_000_000, suffix: 'T' },
+  { value: 1_000_000_000, suffix: 'B' },
+  { value: 1_000_000, suffix: 'M' },
+  { value: 1_000, suffix: 'K' },
+] as const;
 
-const formatYAxis = (value: number) =>
-  `${(value / 1_000_000_000).toFixed(0)}`;
+const formatCompactNumber = (value: number) => {
+  const absValue = Math.abs(value);
+  const scale = COMPACT_SUFFIXES.find(item => absValue >= item.value);
+
+  if (!scale) {
+    return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(value);
+  }
+
+  const scaledValue = value / scale.value;
+  const maximumFractionDigits = Math.abs(scaledValue) >= 10 ? 0 : 1;
+  const formattedValue = new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits,
+  }).format(scaledValue);
+
+  return `${formattedValue}${scale.suffix}`;
+};
+
+const formatCurrency = (value: number) =>
+  `R$ ${formatCompactNumber(value)}`;
+
+const formatYAxis = (value: number) => formatCompactNumber(value);
 
 const parseDataBase = (dateStr: string) => {
   if (/^\d{4}-\d{2}$/.test(dateStr)) {

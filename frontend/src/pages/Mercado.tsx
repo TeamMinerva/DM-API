@@ -9,13 +9,13 @@ export default function Mercado() {
   const { data, loading, error } = useRankingEstados();
 
   return (
-    <div className="flex min-h-screen bg-[#FBFCF8]">
+    <div className="flex h-screen bg-[#FBFCF8]">
       <Sidebar />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <Topbar />
 
-        <main className="p-8 flex flex-col gap-6">
+        <main className="flex-1 p-8 flex flex-col gap-6 overflow-y-auto">
 
           <section>
             <h1 className="text-4xl text-[#1E1E1E]">
@@ -34,7 +34,7 @@ export default function Mercado() {
           {error && <p className="text-red-500">{error}</p>}
 
           {/* Ranking + Participação Regional — lado a lado */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2.6fr)_minmax(320px,1fr)] gap-6">
             {loading ? (
               <div>Carregando...</div>
             ) : (

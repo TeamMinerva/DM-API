@@ -53,7 +53,18 @@ const RankingEstadosCard: React.FC<Props> = ({ estados, borderColor = "#6EE7E7" 
       </div>
 
       {/* Linhas */}
-      <div className="flex flex-col gap-4">
+      <div
+        className="
+          flex max-h-[180px] flex-col gap-4 overflow-y-auto pr-1
+          [&::-webkit-scrollbar]:w-2
+          [&::-webkit-scrollbar-track]:bg-transparent
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:bg-[#D8D6F0]
+          hover:[&::-webkit-scrollbar-thumb]:bg-[#BEBBE4]
+          [scrollbar-width:thin]
+          [scrollbar-color:#D8D6F0_transparent]
+        "
+      >
         {estados.map((estado, index) => {
           const isDestaque = estadosDestaque.includes(estado.uf);
 

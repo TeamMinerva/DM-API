@@ -25,14 +25,14 @@ const RegionalParticipationCard: React.FC<RegionalParticipationCardProps> = ({
 }) => {
   return (
     <div
-      className={`w-full bg-[#F1EFFF] rounded-[20px] p-5 font-[Catamaran] transition-opacity duration-500 ${loading ? 'opacity-40' : 'opacity-100'}`}
+      className={`w-full h-full bg-[#F1EFFF] rounded-[20px] p-6 font-[Catamaran] flex flex-col transition-opacity duration-500 ${loading ? 'opacity-40' : 'opacity-100'}`}
       style={{ borderTop: '5px solid #68E699' }}
     >
-      <span className="block text-xl font-semibold text-[#7B7E86] mb-5 leading-tight">
+      <span className="block text-[17px] font-semibold leading-tight text-[#7B7E86]">
         Participação Regional na Carteira
       </span>
 
-      <div className="flex rounded-full overflow-hidden h-9 w-full mb-5">
+      <div className="mt-9 mb-8 flex h-11 w-full overflow-hidden rounded-full">
         {data.map((d) => (
           <div
             key={d.label}
@@ -41,19 +41,19 @@ const RegionalParticipationCard: React.FC<RegionalParticipationCardProps> = ({
         ))}
       </div>
 
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-4">
         {data.map((d) => (
           <div key={d.label} className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-3">
               <div
-                className="w-4 h-4 rounded-[4px] shrink-0"
+                className="w-5 h-5 rounded-[5px] shrink-0"
                 style={{ background: d.color }}
               />
-              <span className="text-[15px] font-semibold text-[#1E1E1E]">
+              <span className="text-base font-semibold text-[#1E1E1E]">
                 {d.label}
               </span>
             </div>
-            <span className="text-[15px] font-semibold text-[#7B7E86]">
+            <span className="text-base font-semibold text-[#7B7E86]">
               {d.pct}%
             </span>
           </div>
