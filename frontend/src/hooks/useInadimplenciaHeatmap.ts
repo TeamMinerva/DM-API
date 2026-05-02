@@ -42,7 +42,7 @@ export function useInadimplenciaHeatmap(tipo: TipoCliente): HeatmapState {
 
       try {
         const response = await fetch(
-          `${API_BASE}/inadimplencia/heatmap?tipo=${tipo}`,
+          `${API_BASE}/heatmap/inadimplencia?tipo=${tipo}`,
           { signal: controller.signal }
         );
 

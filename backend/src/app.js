@@ -9,7 +9,6 @@ const indicadoresEstadosRoutes = require('./routes/indicadoresEstados');
 const indicadoresRegioesRoutes = require('./routes/indicadoresRegioes');
 const regioesCarteira = require('./routes/regioesCarteira')
 const heatmapRoutes = require('./routes/indicadoresHeatmap')
-const inadimplenciaHeatmapRoutes = require("./routes/inadimplenciaHeatmap");
 
 
 const app = express();
