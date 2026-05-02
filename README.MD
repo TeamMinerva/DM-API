@@ -107,7 +107,7 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 - 📄 Documentação: [Clique aqui](docs/sprints/sprint1.md)
 
 ### 🎯 Sprint 2
-- ✅ Status: Em Andamento
+- ✅ Status: Concluída
 - 📅 Período: 13/04 - 03/05
 - 📄 Documentação: [Clique aqui](docs/sprints/sprint2.md)
 
@@ -123,13 +123,14 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
   <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white">
-  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white">
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
 </p>
 
 ## 🔗 Links do projeto
 - [DoR (Definition of Ready) e DoD (Definition of Done)](docs/DoR-e-DoD.md)
 - [Manual de instalação](docs/manual-de-instalação.md)
-- [Google colab]()
+- [Google colab](docs/colab/DM_API.ipynb)
 ## 👨‍💻 Equipe
 <div align="center">
     <table>
@@ -147,7 +148,7 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
         </tr>
         <tr>
             <td>Isaura Batista</td>
-            <td>Master</td>
+            <td>Scrum Master</td>
             <td><a href="https://github.com/sunrhse"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a></td>
             <td><a href="https://www.linkedin.com/in/isaura-de-lourdes-0561742aa"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"></a></td>
         </tr>
