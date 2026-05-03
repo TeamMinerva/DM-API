@@ -1,56 +1,57 @@
-# Pré-requisitos
-- Node.js (versão 18 ou superior)
-- Python (versão 3.10 ou superior)
-# Manual de instalação
-## Data-anlysis
-#### Acesse a pasta no terminal:
+# 📦 Setup do Projeto
+
+## 🚀 Pré-requisitos
+
+Antes de começar, instale:
+
+### 🔹 Docker
+Baixe e instale o Docker Desktop:  
+https://www.docker.com/products/docker-desktop/
+
+### 🔹 (Apenas Windows) WSL
+No Windows, o Docker utiliza o WSL. Para instalar, execute no PowerShell:
+
+```bash
+wsl --install
 ```
-cd data-analysis
+## ⚙️ Instalação
+### 1. Clonar o repositório
 ```
-#### Crie um ambiente virtual python:
+git clone https://github.com/TeamMinerva/DM-API.git
 ```
-python -m venv venv
-```
-#### Ative o ambiente virtual:
-Windows:
-```
-venv/Scripts/activate
-```
-Linux / Mac:
-```
-source venv/bin/activate
-```
-#### Instale dependências Python:
-```
-pip install -r requirements.txt
-```
-#### Crie o banco de dados:
-```
-python fetch.py
-```
-## Backend
-#### Crie um novo terminal e acesse a pasta:
+### 2. Configurar variáveis de ambiente
+
+Crie um arquivo .env na pasta backend com base no .env.example:
 ```
 cd backend
+cp .env.example .env
 ```
-#### Instale dependências:
+Abra o arquivo .env e altere a senha para:
+
+123456789
+
+### 3. Subir a aplicação com Docker
+
+Na raiz do projeto, execute:
 ```
-npm install
+docker-compose up --build
 ```
-#### Execute o servidor:
+## 🌐 Acessos
+
+Após subir os containers:
+
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000
+
+## 🛑 Observações
+- O primeiro build pode demorar alguns minutos
+- Certifique-se de que o Docker está em execução
+- No Windows, verifique se o WSL está ativo:
 ```
-npm run dev
+wsl -l -v
 ```
-## Frontend
-#### Crie um novo terminal e acesse a pasta:
+## 💡 Comandos úteis
+Parar os containers:
 ```
-cd frontend
-```
-#### Instale dependências:
-```
-npm install
-```
-#### Execute o servidor:
-```
-npm run dev
+docker-compose down
 ```
