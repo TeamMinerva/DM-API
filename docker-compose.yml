@@ -1,0 +1,53 @@
+
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: dm_insights
+      POSTGRES_PASSWORD: 123456789
+      POSTGRES_DB: dm_database  
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  python_fetch:
+    build: data-analysis  # Diz que o Dockerfile está nesta pasta
+    container_name: python_fetch
+    depends_on:
+      - db  # Garante que o banco suba antes do script tentar conectar
+    environment:
+      - DB_URL=postgresql://dm_insights:123456789@db:5432/dm_database
+
+  backend:
+    build: ./backend  # Caminho para onde está o Dockerfile do Node
+    container_name: backend
+    ports:
+      - "3000:3000"   # Mapeia a porta do PC para a do contêiner
+    depends_on:
+      - db            # Só sobe a API depois que o banco estiver pronto
+      - python_fetch   # Garante que o script de fetch rode antes da API
+    env_file:
+      - ./backend/.env # Carrega o seu arquivo de variáveis de ambiente
+    volumes:
+      - ./backend:/app # Sincroniza o código para você não precisar rebuildar a cada mudança
+      - /app/node_modules # Evita que o node_modules do host sobrescreva o do contêiner
+
+  frontend:
+    build: ./frontend
+    container_name: dashboard_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3000
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

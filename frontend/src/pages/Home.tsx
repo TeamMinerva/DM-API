@@ -24,7 +24,7 @@ export default function Home() {
     : null
 
   const estadoMaiorCrescimento = estados.length
-    ? estados.reduce((a, b) => a.crescimento > b.crescimento ? a : b)
+    ? estados.reduce((a, b) => a.taxa_crescimento > b.taxa_crescimento ? a : b)
     : null
 
   const crescimentoNacional = data ? parseFloat(data.crescimentoCarteira) : null
@@ -66,7 +66,7 @@ export default function Home() {
                     stateAbbreviation={estadoMaiorCrescimento?.uf ?? '–'}
                     footerText={
                       estadoMaiorCrescimento
-                        ? `+${estadoMaiorCrescimento.crescimento}% período completo`
+                        ? `+${estadoMaiorCrescimento.taxa_crescimento}% período completo`
                         : '–'
                     }
                     accentColor="#68E699"

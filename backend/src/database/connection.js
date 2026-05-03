@@ -1,15 +1,14 @@
-const sqlite3 = require("sqlite3").verbose();
-const path = require("path");
 
-// caminho absoluto até o banco
-const dbPath = path.resolve(__dirname, "../../../bd/dados.db");
+const { Pool } = require('pg');
 
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error("❌ Erro ao conectar no banco:", err.message);
-  } else {
-    console.log("📦 Conectado ao SQLite em:", dbPath);
-  }
+const pool = new Pool({
+    connectionString: process.env.CONNECTION_STRING
 });
 
-module.exports = db;
+// O Pool emitirá um erro se algo der errado nas conexões em background
+pool.on('error', (err) => {
+    console.error('Erro inesperado no cliente do Postgres', err);
+});
+
+module.exports = pool;
+
