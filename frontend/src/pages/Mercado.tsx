@@ -1,12 +1,20 @@
+import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import RankingEstadosCard from "../components/RankingEstadosCard";
 import StateGrowthChart from "../components/StateGrowthChart";
 import RegionalParticipationCard from "../components/RegionalParticipation";
+import { useCarteiraRegional } from "../hooks/useCarteiraRegional";
 import { useRankingEstados } from "../hooks/useRankingEstados";
 
 export default function Mercado() {
+  const [selectedUFs, setSelectedUFs] = useState<string[]>([]);
   const { data, loading, error } = useRankingEstados();
+  const {
+    data: regionalData,
+    loading: regionalLoading,
+    error: regionalError,
+  } = useCarteiraRegional();
 
   return (
     <div className="flex h-screen bg-[#FBFCF8]">
@@ -28,7 +36,7 @@ export default function Mercado() {
 
           {/* Gráfico de linha — largura total */}
           <div className="w-full">
-            <StateGrowthChart />
+            <StateGrowthChart onSelectedUFsChange={setSelectedUFs} />
           </div>
 
           {error && <p className="text-red-500">{error}</p>}
@@ -38,9 +46,13 @@ export default function Mercado() {
             {loading ? (
               <div>Carregando...</div>
             ) : (
-              <RankingEstadosCard estados={data} />
+              <RankingEstadosCard estados={data} estadosDestaque={selectedUFs} />
             )}
-            <RegionalParticipationCard />
+            <RegionalParticipationCard
+              data={regionalData}
+              loading={regionalLoading}
+              error={regionalError}
+            />
           </div>
 
         </main>

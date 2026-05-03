@@ -32,6 +32,10 @@ interface Option {
 
 type Status = 'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR';
 
+interface StateGrowthChartProps {
+  onSelectedUFsChange?: (ufs: string[]) => void;
+}
+
 // --- Constantes e Auxiliares ---
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 const api = axios.create({ baseURL: API_BASE_URL });
@@ -128,7 +132,9 @@ const pivotBackendData = (raw: BackendEvolucao[]): PivotData[] => {
 };
 
 // --- Componente ---
-export default function StateGrowthChart() {
+export default function StateGrowthChart({
+  onSelectedUFsChange,
+}: StateGrowthChartProps) {
   const [selectedOptions, setSelectedOptions] = useState<MultiValue<Option>>([]);
   const [data, setData]     = useState<BackendEvolucao[]>([]);
   const [status, setStatus] = useState<Status>('IDLE');
@@ -160,7 +166,9 @@ export default function StateGrowthChart() {
 
   const handleSelectChange = (newValue: MultiValue<Option>) => {
     if (newValue.length > 3) return;
+    const ufs = newValue.map(o => o.value);
     setSelectedOptions(newValue);
+    onSelectedUFsChange?.(ufs);
     if (newValue.length >= 2) {
       fetchData(newValue);
     } else {

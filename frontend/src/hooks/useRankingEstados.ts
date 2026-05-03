@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
 export interface RankingEstado {
   uf: string;
@@ -22,7 +22,7 @@ export function useRankingEstados(): RankingState {
   });
 
   useEffect(() => {
-    fetch(`${API_BASE}/carteira-ativa/ranking?top=8`)
+    fetch(`${API_BASE}/carteira-ativa/ranking?top=27`)
       .then((res) => {
         if (!res.ok) throw new Error("Erro ao buscar ranking");
         return res.json();
