@@ -1,17 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database/connection'); // Seu Pool do Postgres
+const { obterRankingScoreCompleto } = require('../database/queries/ranking');
 
-router.get('/estados', async (req, res) => {
-    try {
-        const query = "SELECT DISTINCT uf FROM dados_bcb ORDER BY uf ASC";
-        const resultado = await db.query(query);
-        res.json(resultado.rows);
-    } catch (err) {
-        console.error("Erro ao buscar estados:", err);
-        res.status(500).json({ error: "Erro interno ao buscar estados." });
-    }
-});
+// router.get('/estados', async (req, res) => {
+//     try {
+//         const query = "SELECT DISTINCT uf FROM dados_bcb ORDER BY uf ASC";
+//         const resultado = await db.query(query);
+//         res.json(resultado.rows);
+//     } catch (err) {
+//         console.error("Erro ao buscar estados:", err);
+//         res.status(500).json({ error: "Erro interno ao buscar estados." });
+//     }
+// });
 
 router.get('/carteira-ativa/ranking', async (req, res) => {
     const top = parseInt(req.query.top) || 27;
@@ -71,6 +72,7 @@ router.get('/carteira-ativa/ranking', async (req, res) => {
         res.status(500).json({ error: "Erro interno ao buscar ranking." });
     }
 });
+
 // Feature 1: Evolução da carteira ativa por estado (Gráfico de Linha)
 router.get('/carteira-ativa/evolucao', async (req, res) => {
     const estadosQuery = req.query.estados;
@@ -108,6 +110,26 @@ router.get('/carteira-ativa/evolucao', async (req, res) => {
     } catch (err) {
         console.error("Erro na evolução da carteira:", err);
         res.status(500).json({ error: "Erro interno ao buscar evolução." });
+    }
+});
+
+router.get('/ranking/estados', async (req, res) => {
+    try {
+        const ranking = await obterRankingScoreCompleto();
+        
+        const respostaFormatada = ranking.map(row => ({
+            uf: row.uf,
+            qualidade: parseFloat(row.qualidade) || 0,
+            solidez: parseFloat(row.solidez) || 0,
+            eficiencia: parseFloat(row.eficiencia) || 0,
+            dinamismo: parseFloat(row.dinamismo) || 0,
+            score_total: parseFloat(row.score_total) || 0
+        }));
+
+        res.json(respostaFormatada);
+    } catch (err) {
+        console.error("Erro ao gerar ranking estatístico de estados:", err);
+        res.status(500).json({ error: "Erro interno ao calcular o ranking de scores." });
     }
 });
 
