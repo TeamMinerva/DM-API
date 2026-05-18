@@ -46,7 +46,7 @@ export default function MapaOportunidadesCard() {
       
       <div className="flex-1" />
       
-      <div className="flex flex-col gap-2 relative z-20">
+      <div className="flex flex-col gap-2 relative z-20 w-fit pointer-events-none">
         <div className="flex items-center gap-[10px] text-lg font-semibold text-[#7B7E86]">
           <div className="w-8 h-4 bg-[#202AD0] rounded-[4px]" />
           <span>Alta oportunidade</span>
