@@ -9,14 +9,14 @@ export interface OportunidadeEstado {
     categoria: 'Alta' | 'Média-Alta' | 'Moderada' | 'Baixa';
 }
 
-const categoryColors: Record<string, string> = {
-    'Alta': '#202AD0',
-    'Média-Alta': '#68E699',
-    'Moderada': '#FFE473',
-    'Baixa': '#FF928A',
-    'default': '#E5E7EB'
-};
 
+const categoryColors: Record<string, string> = {
+    'Alta': '#202AD0',       
+    'Média-Alta': '#68E699',
+    'Moderada': '#FFE473',   
+    'Baixa': '#FF928A',     
+    'default': '#E5E7EB'     
+};
 
 const stateNameToUF: Record<string, string> = {
     Acre: "AC", Alagoas: "AL", Amapá: "AP", Amazonas: "AM", Bahia: "BA",
@@ -34,7 +34,6 @@ interface MapaDeOportunidadesProps {
 }
 
 export default function MapaDeOportunidades({ dados }: MapaDeOportunidadesProps) {
-
     const getColor = (uf: string) => {
         const estado = dados.find(e => e.uf === uf);
         if (!estado) return categoryColors.default;
@@ -47,22 +46,21 @@ export default function MapaDeOportunidades({ dados }: MapaDeOportunidadesProps)
         const estadoInfo = dados.find(e => e.uf === uf);
         const baseColor = getColor(uf);
 
-
-        layer.setStyle({ fillColor: baseColor, weight: 0.75, color: "#FFF", fillOpacity: 1 });
+        layer.setStyle({ fillColor: baseColor, weight: 1, color: "#FFFFFF", fillOpacity: 1 });
 
         layer.on("mouseover", () => {
-            layer.setStyle({ weight: 2.5, color: "#FFF", fillOpacity: 0.85, fillColor: baseColor });
+            layer.setStyle({ weight: 3, color: "#FFFFFF", fillOpacity: 0.8, fillColor: baseColor });
             layer.bringToFront();
             const el = layer.getElement?.() ?? (layer as any)._path;
             if (el) {
                 el.style.transform = "translateY(-4px)";
-                el.style.transition = "transform 0.15s ease";
-                el.style.filter = "drop-shadow(0 6px 8px rgba(0,0,0,0.3))";
+                el.style.transition = "all 0.2s ease";
+                el.style.filter = "drop-shadow(0px 8px 12px rgba(0,0,0,0.2))";
             }
         });
 
         layer.on("mouseout", () => {
-            layer.setStyle({ weight: 0.75, color: "#FFF", fillOpacity: 1, fillColor: baseColor });
+            layer.setStyle({ weight: 1, color: "#FFFFFF", fillOpacity: 1, fillColor: baseColor });
             const el = layer.getElement?.() ?? (layer as any)._path;
             if (el) {
                 el.style.transform = "translateY(0)";
@@ -72,11 +70,11 @@ export default function MapaDeOportunidades({ dados }: MapaDeOportunidadesProps)
 
         if (estadoInfo) {
             layer.bindTooltip(
-                `<div style="text-align: center;">
-          <strong>${stateName} (${uf})</strong><br/>
-          Score Total: <strong>${estadoInfo.score_total.toFixed(2)}</strong><br/>
-          Categoria: <strong>${estadoInfo.categoria}</strong>
-        </div>`,
+                `<div style="text-align: center; font-family: sans-serif;">
+                    <strong style="font-size: 14px;">${stateName} (${uf})</strong><br/>
+                    <div style="margin-top: 4px;">Score Total: <strong>${estadoInfo.score_total.toFixed(2)}</strong></div>
+                    <div>Categoria: <strong style="color: ${baseColor}">${estadoInfo.categoria}</strong></div>
+                </div>`,
                 { sticky: true, className: 'custom-leaflet-tooltip' }
             );
         } else {
@@ -87,10 +85,12 @@ export default function MapaDeOportunidades({ dados }: MapaDeOportunidadesProps)
     const mapKey = dados.length > 0 ? 'loaded-oportunidades' : 'empty-oportunidades';
 
     return (
-        <div className="w-full h-full relative bg-transparent min-h-[400px]">
+        <div className="w-full h-full relative bg-transparent">
             <MapContainer
                 key={mapKey}
-                center={[-14, -47.5]} zoom={3.63} zoomSnap={0}
+                center={[-14, -53]}
+                zoom={4} 
+                zoomSnap={0}
                 scrollWheelZoom={false} dragging={false} doubleClickZoom={false}
                 zoomControl={false} attributionControl={false}
                 className="w-full h-full bg-transparent outline-none z-10"
