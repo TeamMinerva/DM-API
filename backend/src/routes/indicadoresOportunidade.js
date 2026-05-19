@@ -38,10 +38,13 @@ router.get('/kpis-score', async (req, res) => {
 
         res.json({
             estados_score_acima_75: estadosAcima75,
+            estados_score_acima_75_lista: ranking
+                .filter(uf => parseFloat(uf.score_total) > 75)
+                .map(uf => nomear(uf.uf)),
             estado_maior_score: nomear(maiorScore.uf),
             estado_maior_dinamismo: nomear(maiorDinamismo.uf),
             estado_menor_dinamismo: nomear(menorDinamismo.uf),
-        });
+});
     } catch (erro) {
         console.error('Erro ao calcular KPIs de score:', erro);
         res.status(500).json({ erro: 'Erro interno ao calcular KPIs.' });
