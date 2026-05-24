@@ -1,95 +1,133 @@
 const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const db = require('../connection');
 
 async function obterRankingScoreCompleto() {
     const query = `
-        WITH ComponentesBrutos AS (
-            -- Camada 1: Calcula as 4 métricas base por UF e mês
+        WITH BaseEstadoData AS (
+            -- Passo 1: Agrupa por UF e Mês (Igual ao seu primeiro .groupby e .agg)
             SELECT 
                 uf,
                 data_base,
-                -- 1. Qualidade = 1 - (Inadimplência / Carteira Ativa)
-                1 - (SUM(carteira_inadimplencia) / NULLIF(SUM(carteira_ativa), 0)) AS qualidade_bruta,
-                -- 2. Solidez = 1 - (Ativo Problemático / Carteira Ativa)
-                1 - (SUM(ativo_problematico) / NULLIF(SUM(carteira_ativa), 0)) AS solidez_bruta,
-                -- 3. Eficiência = Carteira Ativa / Número de Operações
-                SUM(carteira_ativa) / NULLIF(SUM(numero_de_operacoes), 0) AS eficiencia_bruta,
-                -- Guardamos a carteira ativa para calcular o dinamismo na sequência
-                SUM(carteira_ativa) AS carteira_atual
+                SUM(carteira_ativa)::numeric AS carteira_ativa,
+                SUM(carteira_inadimplencia)::numeric AS carteira_inadimplencia,
+                SUM(ativo_problematico)::numeric AS ativo_problematico,
+                SUM(numero_de_operacoes)::numeric AS numero_de_operacoes
             FROM dados_bcb
-            WHERE uf NOT IN ('BR', 'TOTAL') -- Filtra agrupamentos nacionais se houver na coluna UF
+            WHERE uf NOT IN ('BR', 'TOTAL')
             GROUP BY uf, data_base
         ),
-        DinamismoCalculado AS (
-            -- Camada 2: Calcula o crescimento (Dinamismo) comparando o mês atual com o anterior (LAG)
-            -- E filtra apenas o período mais recente (ROW_NUMBER)
+        FiltroPeriodos AS (
+            -- Passo 2: Mapeia o primeiro (.first()) e o último (.last()) mês de cada UF após ordenar
             SELECT 
                 uf,
-                qualidade_bruta,
-                solidez_bruta,
-                eficiencia_bruta,
-                (carteira_atual - LAG(carteira_atual) OVER(PARTITION BY uf ORDER BY data_base ASC)) 
-                    / NULLIF(LAG(carteira_atual) OVER(PARTITION BY uf ORDER BY data_base ASC), 0) AS dinamismo_bruto,
-                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base DESC) AS rnk
-            FROM ComponentesBrutos
+                data_base,
+                carteira_ativa,
+                carteira_inadimplencia,
+                ativo_problematico,
+                numero_de_operacoes,
+                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base ASC) AS rnk_primeiro,
+                ROW_NUMBER() OVER(PARTITION BY uf ORDER BY data_base DESC) AS rnk_ultimo
+            FROM BaseEstadoData
         ),
-        FiltroRecente AS (
-            -- Mantém apenas o último mês processado de cada estado
-            SELECT uf, qualidade_bruta, solidez_bruta, eficiencia_bruta, COALESCE(dinamismo_bruto, 0) AS dinamismo_bruto
-            FROM DinamismoCalculado
-            WHERE rnk = 1
+        PeriodoAtual AS (
+            -- Equivalente ao seu 'periodo_atual' (.last())
+            SELECT 
+                uf,
+                data_base AS data_atual,
+                carteira_ativa AS carteira_ativa_atual,
+                carteira_inadimplencia AS carteira_inadimplencia_atual,
+                ativo_problematico AS ativo_problematico_atual,
+                numero_de_operacoes AS numero_de_operacoes_atual
+            FROM FiltroPeriodos
+            WHERE rnk_ultimo = 1
+        ),
+        PeriodoAnterior AS (
+            -- Equivalente ao seu 'periodo_anterior' (.first())
+            SELECT 
+                uf,
+                data_base AS data_anterior,
+                carteira_ativa AS carteira_ativa_anterior
+            FROM FiltroPeriodos
+            WHERE rnk_primeiro = 1
+        ),
+        ScoreOriginal AS (
+            -- Passo 3: Filtro INNER JOIN mantendo a escala decimal original (0 a 1) do Colab
+            SELECT 
+                atual.uf,
+                atual.data_atual,
+                ant.data_anterior,
+                atual.carteira_ativa_atual,
+                ant.carteira_ativa_anterior,
+                -- Escala decimal idêntica ao Python
+                (1 - (atual.carteira_inadimplencia_atual / NULLIF(atual.carteira_ativa_atual, 0))) AS qualidade,
+                (1 - (atual.ativo_problematico_atual / NULLIF(atual.carteira_ativa_atual, 0))) AS solidez,
+                ((atual.carteira_ativa_atual - ant.carteira_ativa_anterior) / NULLIF(ant.carteira_ativa_anterior, 0)) AS dinamismo,
+                (atual.carteira_ativa_atual / NULLIF(atual.numero_de_operacoes_atual, 0)) AS eficiencia
+            FROM PeriodoAtual atual
+            JOIN PeriodoAnterior ant ON atual.uf = ant.uf
+            WHERE atual.carteira_ativa_atual > 0 
+              AND ant.carteira_ativa_anterior > 0 
+              AND atual.numero_de_operacoes_atual > 0
         ),
         EstatisticasGlobais AS (
-            -- Camada 3: Calcula a Média (AVG) e o Desvio Padrão (STDDEV) do grupo dos 27 estados
+            -- Passo 4: STDDEV_POP garante ddof=0 do NumPy/Pandas sobre a escala correta
             SELECT 
-                AVG(qualidade_bruta) AS avg_q, STDDEV(qualidade_bruta) AS std_q,
-                AVG(solidez_bruta) AS avg_s,   STDDEV(solidez_bruta) AS std_s,
-                AVG(eficiencia_bruta) AS avg_e, STDDEV(eficiencia_bruta) AS std_e,
-                AVG(dinamismo_bruto) AS avg_d,  STDDEV(dinamismo_bruto) AS std_d
-            FROM FiltroRecente
+                AVG(qualidade) AS avg_q, STDDEV_POP(qualidade) AS std_q,
+                AVG(solidez) AS avg_s,   STDDEV_POP(solidez) AS std_s,
+                AVG(dinamismo) AS avg_d,  STDDEV_POP(dinamismo) AS std_d,
+                AVG(eficiencia) AS avg_e, STDDEV_POP(eficiencia) AS std_e
+            FROM ScoreOriginal
         ),
         ZScores AS (
-            -- Camada 4: Aplica o cálculo do Z-Score individual (X - Média) / Desvio
+            -- Passo 5: Geração de Z-Scores sem distorções de escala
             SELECT 
-                f.uf,
-                (f.qualidade_bruta - e.avg_q) / NULLIF(e.std_q, 0) AS z_q,
-                (f.solidez_bruta - e.avg_s) / NULLIF(e.std_s, 0) AS z_s,
-                (f.eficiencia_bruta - e.avg_e) / NULLIF(e.std_e, 0) AS z_e,
-                (f.dinamismo_bruto - e.avg_d) / NULLIF(e.std_d, 0) AS z_d
-            FROM FiltroRecente f, EstatisticasGlobais e
+                s.uf,
+                s.qualidade,
+                s.solidez,
+                s.dinamismo,
+                s.eficiencia,
+                (s.qualidade - e.avg_q) / NULLIF(e.std_q, 0) AS z_q,
+                (s.solidez - e.avg_s) / NULLIF(e.std_s, 0) AS z_s,
+                (s.dinamismo - e.avg_d) / NULLIF(e.std_d, 0) AS z_d,
+                (s.eficiencia - e.avg_e) / NULLIF(e.std_e, 0) AS z_e
+            FROM ScoreOriginal s, EstatisticasGlobais e
         ),
         LimitesMinMax AS (
-            -- Camada 5: Encontra os limites máximos e mínimos globais de Z-Score para a escala 0-100
+            -- Passo 6: Limites Min/Max dos Z-Scores
             SELECT 
                 MIN(z_q) AS min_zq, MAX(z_q) AS max_zq,
                 MIN(z_s) AS min_zs, MAX(z_s) AS max_zs,
-                MIN(z_e) AS min_ze, MAX(z_e) AS max_ze,
-                MIN(z_d) AS min_zd, MAX(z_d) AS max_zd
+                MIN(z_d) AS min_zd, MAX(z_d) AS max_zd,
+                MIN(z_e) AS min_ze, MAX(z_e) AS max_ze
             FROM ZScores
         ),
         ScoresNormalizados AS (
-            -- Camada 6: Normaliza cada componente para a escala de 0 a 100
+            -- Passo 7: Normalização linear de 0 a 100 baseada na série tratada
             SELECT 
                 z.uf,
-                ((z.z_q - l.min_zq) / NULLIF(l.max_zq - l.min_zq, 0)) * 100 AS qualidade,
-                ((z.z_s - l.min_zs) / NULLIF(l.max_zs - l.min_zs, 0)) * 100 AS solidez,
-                ((z.z_e - l.min_ze) / NULLIF(l.max_ze - l.min_ze, 0)) * 100 AS eficiencia,
-                ((z.z_d - l.min_zd) / NULLIF(l.max_zd - l.min_zd, 0)) * 100 AS dinamismo
+                z.qualidade,
+                z.solidez,
+                z.dinamismo,
+                z.eficiencia,
+                ((z.z_q - l.min_zq) / NULLIF(l.max_zq - l.min_zq, 0)) * 100 AS q_norm,
+                ((z.z_s - l.min_zs) / NULLIF(l.max_zs - l.min_zs, 0)) * 100 AS s_norm,
+                ((z.z_d - l.min_zd) / NULLIF(l.max_zd - l.min_zd, 0)) * 100 AS d_norm,
+                ((z.z_e - l.min_ze) / NULLIF(l.max_ze - l.min_ze, 0)) * 100 AS e_norm
             FROM ZScores z, LimitesMinMax l
         )
-        -- Camada Final: Aplica os pesos de negócio ponderados e gera o Score Total
+        -- Passo Final: Multiplicação visual por 100 apenas na saída para o front-end
         SELECT 
             uf,
-            ROUND(CAST(qualidade AS numeric), 2) AS qualidade,
-            ROUND(CAST(solidez AS numeric), 2) AS solidez,
+            ROUND(CAST(qualidade * 100 AS numeric), 2) AS qualidade,
+            ROUND(CAST(solidez * 100 AS numeric), 2) AS solidez,
+            ROUND(CAST(dinamismo * 100 AS numeric), 2) AS dinamismo,
             ROUND(CAST(eficiencia AS numeric), 2) AS eficiencia,
-            ROUND(CAST(dinamismo AS numeric), 2) AS dinamismo,
             ROUND(CAST(
-                (qualidade * 0.35) + 
-                (solidez * 0.30) + 
-                (dinamismo * 0.25) + 
-                (eficiencia * 0.10) 
+                (COALESCE(q_norm, 0) * 0.35) + 
+                (COALESCE(s_norm, 0) * 0.30) + 
+                (COALESCE(d_norm, 0) * 0.25) + 
+                (COALESCE(e_norm, 0) * 0.10) 
             AS numeric), 2) AS score_total
         FROM ScoresNormalizados
         ORDER BY score_total DESC;
