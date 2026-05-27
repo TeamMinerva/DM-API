@@ -128,9 +128,9 @@ async function obterRankingScoreCompleto() {
                 (COALESCE(s_norm, 0) * 0.30) + 
                 (COALESCE(d_norm, 0) * 0.25) + 
                 (COALESCE(e_norm, 0) * 0.10) 
-            AS numeric), 2) AS score_total
+            AS numeric), 2) AS score
         FROM ScoresNormalizados
-        ORDER BY score_total DESC;
+        ORDER BY score DESC;
     `;
 
     const resultado = await db.query(query);

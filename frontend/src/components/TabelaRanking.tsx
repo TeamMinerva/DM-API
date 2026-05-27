@@ -1,25 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useRankingScore } from '../hooks/useRankingEstados';
 
-interface DadosOportunidade {
-  estado: string;
-  eficiencia: number;
-  solidez: number;
+export interface DadosOportunidade {
   dinamismo: number;
+  eficiencia: number;
   qualidade: number;
   score: number;
+  solidez: number;
+  uf: string;
 }
 
 const TabelaRanking = () => {
-  const [dados, setDados] = useState<DadosOportunidade[]>([
-    { estado: 'SP', eficiencia: 150, solidez: 85, dinamismo: 15, qualidade: 90, score: 9.5 },
-    { estado: 'MG', eficiencia: 120, solidez: 80, dinamismo: 12, qualidade: 88, score: 8.9 },
-    { estado: 'SC', eficiencia: 90, solidez: 82, dinamismo: 10, qualidade: 85, score: 8.5 },
-    { estado: 'PR', eficiencia: 80, solidez: 78, dinamismo: 8, qualidade: 80, score: 8.1 },
-    { estado: 'RS', eficiencia: 70, solidez: 75, dinamismo: 5, qualidade: 70, score: 7.8 },
-  ]);
+  console.log(...useRankingScore().data)
+  const { data: rankingData, loading } = useRankingScore();
 
-  const todosDinamismos = dados.map(d => d.dinamismo);
-  const todasQualidades = dados.map(d => d.qualidade);
+  const dadosFiltrados = useMemo(() => {
+    return rankingData ? [...rankingData] : [];
+  }, [rankingData]);
+
+  if (loading) return <p>Carregando...</p>;
+
+  const todosDinamismos = dadosFiltrados.map(d => d.dinamismo);
+  const todasQualidades = dadosFiltrados.map(d => d.qualidade);
 
   const getCorDinamismo = (valor: number) => {
     const max = Math.max(...todosDinamismos);
@@ -34,6 +36,7 @@ const TabelaRanking = () => {
     if (top2.includes(valor)) return 'text-[#68E699]'; 
     return 'text-[#FFE473]';                           
   };
+
 
   return (
     <div className="w-full bg-[#F1EFFF] rounded-2xl shadow-sm overflow-hidden font-[Catamaran]">
@@ -59,21 +62,21 @@ const TabelaRanking = () => {
               </tr>
             </thead>
             <tbody>
-              {dados.slice(0, 5).map((row, index) => (
+              {dadosFiltrados.slice(0, 27).map((row, index) => (
                 <tr 
-                  key={row.estado} 
+                  key={row.uf} 
                   className="border-b border-[#E2E2EA]/60 hover:bg-black/5 transition-colors"
                 >
                   <td className="py-4 px-2 flex items-center gap-4">
                     <span className="text-[#7B7E86] font-medium text-[15px] w-3">{index + 1}</span>
-                    <span className="font-semibold text-[#7B7E86]">{row.estado}</span>
+                    <span className="font-semibold text-[#7B7E86]">{row.uf}</span>
                   </td>
                   
-                  <td className="py-4 px-2 font-semibold text-black">{row.eficiencia}K</td>
+                  <td className="py-4 px-2 font-semibold text-black">{(row.eficiencia / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}K</td>
                   <td className="py-4 px-2 font-semibold text-black">{row.solidez}%</td>
                   
                   <td className={`py-4 px-2 font-extrabold ${getCorDinamismo(row.dinamismo)}`}>
-                    {row.dinamismo}%
+                    {row.dinamismo}
                   </td>
                   
                   <td className={`py-4 px-2 font-extrabold ${getCorQualidade(row.qualidade)}`}>
@@ -81,6 +84,7 @@ const TabelaRanking = () => {
                   </td>
                   
                   <td className="py-4 px-2 font-bold text-black">{row.score}</td>
+
                 </tr>
               ))}
             </tbody>

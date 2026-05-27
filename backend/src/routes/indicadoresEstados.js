@@ -113,7 +113,7 @@ router.get('/carteira-ativa/evolucao', async (req, res) => {
     }
 });
 
-router.get('/ranking/estados', async (req, res) => {
+router.get('/ranking/score', async (req, res) => {
     try {
         const ranking = await obterRankingScoreCompleto();
         
@@ -123,7 +123,7 @@ router.get('/ranking/estados', async (req, res) => {
             solidez: parseFloat(row.solidez) || 0,
             eficiencia: parseFloat(row.eficiencia) || 0,
             dinamismo: parseFloat(row.dinamismo) || 0,
-            score_total: parseFloat(row.score_total) || 0
+            score: parseFloat(row.score) || 0
         }));
 
         res.json(respostaFormatada);
