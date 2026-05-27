@@ -10,7 +10,6 @@ const indicadoresRegioesRoutes = require('./routes/indicadoresRegioes');
 const regioesCarteira = require('./routes/regioesCarteira')
 const heatmapRoutes = require('./routes/indicadoresHeatmap')
 
-
 const app = express();
 
 app.use(cors());
@@ -21,6 +20,7 @@ app.use("/indicadores-nacionais", indicadoresRoutes);
 app.use("/", kpisRoutes); 
 app.use("/", indicadoresEstadosRoutes);
 app.use('/regioes', indicadoresRegioesRoutes);
+app.use('/api', indicadoresEstadosRoutes)
 app.use("/regioes", regioesCarteira)
 app.use("/heatmap", heatmapRoutes);
 
