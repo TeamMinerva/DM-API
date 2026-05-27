@@ -19,10 +19,10 @@ router.get('/kpis-score', async (req, res) => {
             parseFloat(a.dinamismo) < parseFloat(b.dinamismo) ? a : b
         );
 
+        // campo correto da query é "score", não "score_total"
         const estadosAcima75 = ranking.filter(
-            (uf) => parseFloat(uf.score_total) > 75
+            (uf) => parseFloat(uf.score) > 75
         ).length;
-
 
         const ESTADOS = {
             AC: 'Acre', AL: 'Alagoas', AP: 'Amapá', AM: 'Amazonas',
@@ -39,12 +39,12 @@ router.get('/kpis-score', async (req, res) => {
         res.json({
             estados_score_acima_75: estadosAcima75,
             estados_score_acima_75_lista: ranking
-                .filter(uf => parseFloat(uf.score_total) > 75)
+                .filter(uf => parseFloat(uf.score) > 75)
                 .map(uf => nomear(uf.uf)),
             estado_maior_score: nomear(maiorScore.uf),
             estado_maior_dinamismo: nomear(maiorDinamismo.uf),
             estado_menor_dinamismo: nomear(menorDinamismo.uf),
-});
+        });
     } catch (erro) {
         console.error('Erro ao calcular KPIs de score:', erro);
         res.status(500).json({ erro: 'Erro interno ao calcular KPIs.' });

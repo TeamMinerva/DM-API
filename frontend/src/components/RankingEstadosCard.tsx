@@ -77,7 +77,7 @@ const RankingEstadosCard: React.FC<Props> = ({
         </h2>
       </div>
 
-      <div className="grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1.5fr_1fr_1fr] pb-3 border-b border-[#E2E2EA] mb-5">
+      <div className="grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1.5fr_1fr_1fr] pb-3 border-b border-[#E2E2EA] mb-2">
         <span className="text-sm sm:text-[18px] font-semibold text-[#7B7E86]">
           Estado
         </span>
@@ -91,7 +91,7 @@ const RankingEstadosCard: React.FC<Props> = ({
 
       <div
         className="
-          flex max-h-[180px] flex-col gap-4 overflow-y-auto pr-1
+          flex flex-col overflow-y-auto max-h-[180px] pr-1
           [&::-webkit-scrollbar]:w-2
           [&::-webkit-scrollbar-track]:bg-transparent
           [&::-webkit-scrollbar-thumb]:rounded-full
@@ -107,7 +107,7 @@ const RankingEstadosCard: React.FC<Props> = ({
           return (
             <div
               key={estado.uf}
-              className="grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1.5fr_1fr_1fr] items-center gap-1"
+              className="grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1.5fr_1fr_1fr] items-center gap-1 py-3 border-b border-[#E2E2EA]/60 last:border-b-0"
             >
               <div className="flex items-center gap-2 sm:gap-4 min-w-0">
                 <span className="text-[#8C8F99] font-medium text-xs sm:text-base w-3 shrink-0">

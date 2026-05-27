@@ -11,11 +11,11 @@ export interface OportunidadeEstado {
 
 
 const categoryColors: Record<string, string> = {
-    'Alta': '#202AD0',       
+    'Alta': '#202AD0',
     'Média-Alta': '#68E699',
-    'Moderada': '#FFE473',   
-    'Baixa': '#FF928A',     
-    'default': '#E5E7EB'     
+    'Moderada': '#FFE473',
+    'Baixa': '#FF928A',
+    'default': '#E5E7EB'
 };
 
 const stateNameToUF: Record<string, string> = {
@@ -88,8 +88,9 @@ export default function MapaDeOportunidades({ dados }: MapaDeOportunidadesProps)
         <div className="w-full h-full relative bg-transparent">
             <MapContainer
                 key={mapKey}
-                center={[-14, -53]}
-                zoom={4} 
+                // @ts-ignore
+                center={[-14, -47.5]}
+                zoom={3.63}
                 zoomSnap={0}
                 scrollWheelZoom={false} dragging={false} doubleClickZoom={false}
                 zoomControl={false} attributionControl={false}
