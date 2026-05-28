@@ -6,13 +6,13 @@ import geoData from "./brazil-states.geo.json";
 export interface OportunidadeEstado {
     uf: string;
     score_total: number;
-    categoria: 'Alta' | 'Média-Alta' | 'Moderada' | 'Baixa';
+    categoria: 'Alta' | 'Media-Alta' | 'Moderada' | 'Baixa';
+    ranking?: number;
 }
-
 
 const categoryColors: Record<string, string> = {
     'Alta': '#202AD0',
-    'Média-Alta': '#68E699',
+    'Media-Alta': '#68E699',
     'Moderada': '#FFE473',
     'Baixa': '#FF928A',
     'default': '#E5E7EB'

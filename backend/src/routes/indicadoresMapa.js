@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { obterRankingScoreCompleto } = require('../database/queries/ranking');
 
 function obterCategoriaPorScore(score) {
   if (score >= 75) return 'Alta';
@@ -14,27 +15,13 @@ const listaUFsObrigatorias = [
   'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
 ];
 
-async function obterScoresMockados() {
-  return [
-    { uf: 'SP', score_total: 92.45 },
-    { uf: 'RJ', score_total: 78.2 },
-    { uf: 'MG', score_total: 64.8 },
-    { uf: 'PR', score_total: 52.35 },
-    { uf: 'BA', score_total: 41.9 },
-    { uf: 'PE', score_total: 33.4 },
-    { uf: 'GO', score_total: 27.75 },
-    { uf: 'AM', score_total: 18.5 },
-    { uf: 'AC', score_total: 8.1 }
-  ];
-}
-
 router.get('/api/mapa/oportunidade', async (req, res) => {
   try {
-    const dadosScores = await obterScoresMockados();
+    const rankingScore = await obterRankingScoreCompleto();
 
     const respostaBase = listaUFsObrigatorias.map(uf => {
-      const estadoDados = dadosScores.find(item => item.uf && item.uf.trim().toUpperCase() === uf);
-      const scoreTotal = estadoDados ? parseFloat(estadoDados.score_total) || 0 : 0;
+      const estadoDados = rankingScore.find(item => item.uf && item.uf.trim().toUpperCase() === uf);
+      const scoreTotal = estadoDados ? parseFloat(estadoDados.score) || 0 : 0;
 
       return {
         uf,

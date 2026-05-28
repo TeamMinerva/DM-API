@@ -7,8 +7,6 @@ const indicadoresRoutes = require("./routes/indicadoresNacionais");
 const kpisRoutes = require("./routes/indicadoresKPI");
 const indicadoresEstadosRoutes = require('./routes/indicadoresEstados');
 const indicadoresRegioesRoutes = require('./routes/indicadoresRegioes');
-const regioesCarteira = require('./routes/regioesCarteira')
-const heatmapRoutes = require('./routes/indicadoresHeatmap')
 const indicadoresOportunidadeRoutes = require('./routes/indicadoresOportunidade');
 const regioesCarteira = require('./routes/regioesCarteira');
 const heatmapRoutes = require('./routes/indicadoresHeatmap');
@@ -24,9 +22,7 @@ app.use("/indicadores-nacionais", indicadoresRoutes);
 app.use("/", kpisRoutes); 
 app.use("/", indicadoresEstadosRoutes);
 app.use('/regioes', indicadoresRegioesRoutes);
-app.use('/api', indicadoresEstadosRoutes)
-app.use("/regioes", regioesCarteira)
-app.use("/heatmap", heatmapRoutes);
+app.use('/api', indicadoresEstadosRoutes);
 app.use("/oportunidades", indicadoresOportunidadeRoutes);
 app.use("/regioes", regioesCarteira);
 app.use("/heatmap", heatmapRoutes);

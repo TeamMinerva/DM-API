@@ -49,21 +49,16 @@ const TabelaRanking = () => {
 
   if (loading) return <p>Carregando...</p>;
 
-  const todosDinamismos = dadosFiltrados.map(d => d.dinamismo);
-  const todasQualidades = dadosFiltrados.map(d => d.qualidade);
-
   const getCorDinamismo = (valor: number) => {
-    const max = Math.max(...todosDinamismos);
-    const min = Math.min(...todosDinamismos);
-    if (valor === max) return 'text-[#68E699]';
-    if (valor === min) return 'text-[#FF928A]';
-    return 'text-[#FFE473]';
+    if (valor <= 2.9) return 'text-[#FF928A]';
+    if (valor <= 7.9) return 'text-[#FFE473]';
+    return 'text-[#68E699]';
   };
 
   const getCorQualidade = (valor: number) => {
-    const top2 = [...todasQualidades].sort((a, b) => b - a).slice(0, 2);
-    if (top2.includes(valor)) return 'text-[#68E699]';
-    return 'text-[#FFE473]';
+    if (valor <= 93) return 'text-[#FF928A]';
+    if (valor <= 96.4) return 'text-[#FFE473]';
+    return 'text-[#68E699]';
   };
 
   return (
