@@ -10,13 +10,16 @@ const indicadoresRegioesRoutes = require('./routes/indicadoresRegioes');
 const regioesCarteira = require('./routes/regioesCarteira')
 const heatmapRoutes = require('./routes/indicadoresHeatmap')
 const indicadoresOportunidadeRoutes = require('./routes/indicadoresOportunidade');
+const regioesCarteira = require('./routes/regioesCarteira');
+const heatmapRoutes = require('./routes/indicadoresHeatmap');
+const mapaOportunidadeRoutes = require('./routes/indicadoresMapa');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// rotas
+
 app.use("/indicadores-nacionais", indicadoresRoutes);
 app.use("/", kpisRoutes); 
 app.use("/", indicadoresEstadosRoutes);
@@ -25,6 +28,9 @@ app.use('/api', indicadoresEstadosRoutes)
 app.use("/regioes", regioesCarteira)
 app.use("/heatmap", heatmapRoutes);
 app.use("/oportunidades", indicadoresOportunidadeRoutes);
+app.use("/regioes", regioesCarteira);
+app.use("/heatmap", heatmapRoutes);
+app.use("/", mapaOportunidadeRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "API Node.js rodando 🚀" });

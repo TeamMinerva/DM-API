@@ -23,28 +23,24 @@ Clique para assistir ao vídeo:
         <th>Rank</th>
         <th>Prioridade</th>
         <th>User Story</th>
-        <th>Sprint</th>
         <th>Estimativa</th>
     </tr>
     <tr>
         <td>1</td>
         <td>Alta</td>
         <td>Como analista da DM Card, quero acessar o dashboard pelo navegador, para consultar os dados de crédito a qualquer momento.</td>
-        <td>1</td>
         <td>5</td>
     </tr>
     <tr>
         <td>2</td>
         <td>Alta</td>
         <td>Como analista da DM Card, quero visualizar o painel inicial com os dados nacionais de concessão de crédito, para ter uma visão geral antes de aprofundar a análise regional.</td>
-        <td>1</td>
         <td>8</td>
     </tr>
     <tr>
         <td>3</td>
         <td>Alta</td>
         <td>Como analista da DM Card, quero acessar o dashboard em qualquer dispositivo e tamanho de tela sem perda de funcionalidade, para consultar os dados onde estiver.</td>
-        <td>1</td>
         <td>5</td>
     </tr>
 </table>
@@ -59,7 +55,7 @@ Principais atividades:
 - Implementação da leitura de arquivos CSV
 - Tratamento inicial dos dados
 
-Resultado da sprint: O sistema consegue importar e preparar os dados para análise.
+> Resultado da sprint: O sistema consegue importar e preparar os dados para análise.
 
 ## 📌 DoR e DoD da Sprint
 ### User Story 1: Acessar o dashboard pelo navegador
@@ -76,6 +72,7 @@ Resultado da sprint: O sistema consegue importar e preparar os dados para análi
 - Testado em pelo menos 1 navegador (Chrome, por exemplo)
 - Código versionado no Git
 - Sem erros críticos no console
+---
 
 ### User Story 2: Visualizar painel inicial com dados nacionais
 
@@ -94,6 +91,7 @@ Resultado da sprint: O sistema consegue importar e preparar os dados para análi
 - Dados atualizam corretamente ao carregar a página
 - Código organizado e reutilizável
 - Testado manualmente (valores conferidos)
+---
 
 ### User Story 3: Dashboard responsivo (qualquer dispositivo)
 
