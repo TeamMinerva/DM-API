@@ -25,6 +25,15 @@ export default function Expansao() {
         <Topbar />
 
         <main className="p-8 flex-1 overflow-auto flex flex-col gap-6">
+          <section>
+            <h1 className="text-4xl text-[#1E1E1E]">
+              Oportunidades de Expansão
+            </h1>
+            <p className="mt-4 text-[18px] text-[#7B7E86] font-medium">
+              Identificação de mercados prioritários para expansão da carteira de crédito
+            </p>
+          </section>
+
           {error && (
             <p className="text-red-500 text-sm">
               Erro ao carregar KPIs de expansão: {error}

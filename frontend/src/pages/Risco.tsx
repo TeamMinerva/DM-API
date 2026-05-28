@@ -34,6 +34,15 @@ export default function Risco() {
         <Topbar />
 
         <main className="flex-1 px-8 py-6 space-y-6 overflow-y-auto">
+          <section>
+            <h1 className="text-4xl text-[#1E1E1E]">
+              Risco de Crédito
+            </h1>
+            <p className="mt-4 text-[18px] text-[#7B7E86] font-medium">
+              Monitoramento da inadimplência e ativos problemáticos da carteira ativa
+            </p>
+          </section>
+
           {error && (
             <p className="text-red-500 text-sm">
               Erro ao carregar KPIs de risco: {error}
