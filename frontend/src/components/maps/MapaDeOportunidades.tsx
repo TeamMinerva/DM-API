@@ -48,24 +48,38 @@ export default function MapaDeOportunidades({ dados }: MapaDeOportunidadesProps)
 
         layer.setStyle({ fillColor: baseColor, weight: 1, color: "#FFFFFF", fillOpacity: 1 });
 
+        const resetEl = (el: HTMLElement) => {
+            el.style.transform = "translateY(0)";
+            el.style.filter = "none";
+            el.style.transition = "transform 0.2s ease, filter 0.2s ease";
+        };
+
+        const elevateEl = (el: HTMLElement) => {
+            el.style.transform = "translateY(-4px)";
+            el.style.transition = "transform 0.2s ease, filter 0.2s ease";
+            el.style.filter = "drop-shadow(0px 8px 12px rgba(0,0,0,0.2))";
+        };
+
         layer.on("mouseover", () => {
+            layer._map?.eachLayer((l: any) => {
+                if (l !== layer) {
+                    l.closeTooltip?.();
+                    if (l._path) resetEl(l._path);
+                    if (l.setStyle) l.setStyle({ weight: 1, fillOpacity: 1 });
+                }
+            });
+
             layer.setStyle({ weight: 3, color: "#FFFFFF", fillOpacity: 0.8, fillColor: baseColor });
             layer.bringToFront();
+
             const el = layer.getElement?.() ?? (layer as any)._path;
-            if (el) {
-                el.style.transform = "translateY(-4px)";
-                el.style.transition = "all 0.2s ease";
-                el.style.filter = "drop-shadow(0px 8px 12px rgba(0,0,0,0.2))";
-            }
+            if (el) elevateEl(el);
         });
 
         layer.on("mouseout", () => {
             layer.setStyle({ weight: 1, color: "#FFFFFF", fillOpacity: 1, fillColor: baseColor });
             const el = layer.getElement?.() ?? (layer as any)._path;
-            if (el) {
-                el.style.transform = "translateY(0)";
-                el.style.filter = "none";
-            }
+            if (el) resetEl(el);
         });
 
         if (estadoInfo) {
