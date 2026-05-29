@@ -112,7 +112,7 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 - 📄 Documentação: [Clique aqui](docs/sprints/sprint2.md)
 
 ### 🎯 Sprint 3
-- ✅ Status: Planejada
+- ✅ Status: Concluída
 - 📅 Período: 11/05 - 31/05
 - 📄 Documentação: [Clique aqui](docs/sprints/sprint3.md)
 

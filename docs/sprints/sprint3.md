@@ -11,6 +11,11 @@
 ## 💻 Demonstração do Sistema
 Clique para assistir ao vídeo:
 
+<p align="center">
+<a href="https://www.youtube.com/watch?v=8kruHTAhN28" target="_blank">
+  <img src="https://img.youtube.com/vi/8kruHTAhN28/maxresdefault.jpg" width="600">
+</a>
+</p>
 
 ## 📝 Backlog da Sprint
 <table>
