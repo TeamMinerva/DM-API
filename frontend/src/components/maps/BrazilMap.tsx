@@ -54,24 +54,38 @@ export default function BrazilMap({ estadosData }: BrazilMapProps) {
 
     layer.setStyle({ fillColor: baseColor, weight: 0.75, color: "#FFF", fillOpacity: 1 })
 
+    const resetEl = (el: HTMLElement) => {
+      el.style.transform = "translateY(0)"
+      el.style.filter = "none"
+      el.style.transition = "transform 0.15s ease, filter 0.15s ease"
+    }
+
+    const elevateEl = (el: HTMLElement) => {
+      el.style.transform = "translateY(-4px)"
+      el.style.transition = "transform 0.15s ease, filter 0.15s ease"
+      el.style.filter = "drop-shadow(0 6px 8px rgba(0,0,0,0.3))"
+    }
+
     layer.on("mouseover", () => {
+      layer._map?.eachLayer((l: any) => {
+        if (l !== layer) {
+          l.closeTooltip?.()
+          if (l._path) resetEl(l._path)
+          if (l.setStyle) l.setStyle({ weight: 0.75, fillOpacity: 1 })
+        }
+      })
+
       layer.setStyle({ weight: 2.5, color: "#FFF", fillOpacity: 0.75, fillColor: baseColor })
       layer.bringToFront()
+
       const el = layer.getElement?.() ?? (layer as any)._path
-      if (el) {
-        el.style.transform = "translateY(-4px)"
-        el.style.transition = "transform 0.15s ease"
-        el.style.filter = "drop-shadow(0 6px 8px rgba(0,0,0,0.3))"
-      }
+      if (el) elevateEl(el)
     })
 
     layer.on("mouseout", () => {
       layer.setStyle({ weight: 0.75, color: "#FFF", fillOpacity: 1, fillColor: baseColor })
       const el = layer.getElement?.() ?? (layer as any)._path
-      if (el) {
-        el.style.transform = "translateY(0)"
-        el.style.filter = "none"
-      }
+      if (el) resetEl(el)
     })
 
     const carteiraFmt = estado ? formatCarteira(Number(estado.carteira_ativa)) : 'N/A'
