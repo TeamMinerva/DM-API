@@ -52,10 +52,10 @@ Nesta etapa foi desenvolvida a lógica responsável pelo processamento e anális
 
 Principais atividades:
 
-Implementação da análise dos dados
-Cálculo de indicadores de crédito
-Agrupamento das informações por região e porte de cliente
-Geração de métricas para identificar potencial de expansão de crédito sustentável
+- Implementação da análise dos dados
+- Cálculo de indicadores de crédito
+- Agrupamento das informações por região e porte de cliente
+- Geração de métricas para identificar potencial de expansão de crédito sustentável
 
 > Resultado da sprint: O sistema passa a gerar indicadores que permitem analisar o comportamento do crédito nas diferentes regiões.
 

@@ -112,7 +112,7 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 - 📄 Documentação: [Clique aqui](docs/sprints/sprint2.md)
 
 ### 🎯 Sprint 3
-- ✅ Status: Planejada
+- ✅ Status: Concluída
 - 📅 Período: 11/05 - 31/05
 - 📄 Documentação: [Clique aqui](docs/sprints/sprint3.md)
 
@@ -131,6 +131,8 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 - [DoR (Definition of Ready) e DoD (Definition of Done)](docs/DoR-e-DoD.md)
 - [Manual de instalação](docs/manual-de-instalação.md)
 - [Google colab](docs/colab/DM_API.ipynb)
+- [Metodologia de cáluco do Score](docs/metodologia-score.md)
+
 ## 👨‍💻 Equipe
 <div align="center">
     <table>
