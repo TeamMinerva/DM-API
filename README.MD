@@ -7,11 +7,12 @@
     <a href="#-mvp"> MVP </a> |
     <a href="#-sprints"> Sprints </a> |
     <a href="#-tecnologias-utilizadas"> Tecnologias Utilizadas </a> |
+    <a href="#demonstracao"> Demonstração </a> |
     <a href="#links-do-projeto"> Links do projeto </a> |
     <a href="#equipe"> Equipe </a> |
 </p>
 
-## 📌 Descrição do desafio'
+## 📌 Descrição do desafio
 A DM card quer expandir a concessão de crédito de forma sustentável, evitando regiões com alto risco de inadimplência e identificando locais com maior potencial econômico.
 Entretanto, os dados disponíveis do Sistema Financeiro Nacional, como os fornecidos pelo Banco Central, são complexos e dispersos, dificultando a análise rápida para tomada de decisão.
 
@@ -100,12 +101,13 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 ## 🏆 MVP
 <img src="docs/assets/mvp.jpeg">
 
-
+<a name="demonstracao"></a>
 ## 🎬 Demonstração
 <p align="center">
   <img src="docs/assets/demo.gif" alt="Demonstração do dashboard DM-API">
 </p>
 
+> 🎥 Vídeo completo da demonstração (Sprint 3): [assista no YouTube](https://www.youtube.com/watch?v=8kruHTAhN28)
 
 ## 📅 Sprints
 ### 🎯 Sprint 1
