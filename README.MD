@@ -130,7 +130,7 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 ## 🔗 Links do projeto
 - [DoR (Definition of Ready) e DoD (Definition of Done)](docs/DoR-e-DoD.md)
 - [Manual de instalação](docs/manual-de-instalação.md)
-- [Google colab](docs/colab/DM_API.ipynb)
+- [Google colab](https://colab.research.google.com/github/TeamMinerva/DM-API/blob/main/docs/colab/DM_API.ipynb)
 - [Metodologia de cáluco do Score](docs/metodologia-score.md)
 
 ## 👨‍💻 Equipe
