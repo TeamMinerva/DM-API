@@ -7,7 +7,6 @@
     <a href="#-mvp"> MVP </a> |
     <a href="#-sprints"> Sprints </a> |
     <a href="#-tecnologias-utilizadas"> Tecnologias Utilizadas </a> |
-    <a href="#demonstracao"> Demonstração </a> |
     <a href="#links-do-projeto"> Links do projeto </a> |
     <a href="#equipe"> Equipe </a> |
 </p>
@@ -100,14 +99,6 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
 
 ## 🏆 MVP
 <img src="docs/assets/mvp.jpeg">
-
-<a name="demonstracao"></a>
-## 🎬 Demonstração
-<p align="center">
-  <img src="docs/assets/demo.gif" alt="Demonstração do dashboard DM-API">
-</p>
-
-> 🎥 Vídeo completo da demonstração (Sprint 3): [assista no YouTube](https://www.youtube.com/watch?v=8kruHTAhN28)
 
 ## 📅 Sprints
 ### 🎯 Sprint 1
