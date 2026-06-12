@@ -11,12 +11,6 @@
     <a href="#equipe"> Equipe </a> |
 </p>
 
-<br>
-
-> Status do projeto: Finalizado ✔️
-
-<br>
-
 ## 📌 Descrição do desafio
 A DM card quer expandir a concessão de crédito de forma sustentável, evitando regiões com alto risco de inadimplência e identificando locais com maior potencial econômico.
 Entretanto, os dados disponíveis do Sistema Financeiro Nacional, como os fornecidos pelo Banco Central, são complexos e dispersos, dificultando a análise rápida para tomada de decisão.
