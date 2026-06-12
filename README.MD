@@ -7,8 +7,8 @@
     <a href="#-mvp"> MVP </a> |
     <a href="#-sprints"> Sprints </a> |
     <a href="#-tecnologias-utilizadas"> Tecnologias Utilizadas </a> |
-    <a href="#-links-da-documentação"> Links da documentação </a> |
-    <a href="#-equipe"> Equipe </a> |
+    <a href="#links-do-projeto"> Links do projeto </a> |
+    <a href="#equipe"> Equipe </a> |
 </p>
 
 ## 📌 Descrição do desafio
@@ -127,12 +127,14 @@ Assim, o sistema auxilia analistas financeiros na tomada de decisão estratégic
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
 </p>
 
+<a name="links-do-projeto"></a>
 ## 🔗 Links do projeto
 - [DoR (Definition of Ready) e DoD (Definition of Done)](docs/DoR-e-DoD.md)
 - [Manual de instalação](docs/manual-de-instalação.md)
-- [Google colab](docs/colab/DM_API.ipynb)
-- [Metodologia de cáluco do Score](docs/metodologia-score.md)
+- [Google colab](https://colab.research.google.com/github/TeamMinerva/DM-API/blob/main/docs/colab/DM_API.ipynb)
+- [Metodologia de cálculo do Score](docs/metodologia-score.md)
 
+<a name="equipe"></a>
 ## 👨‍💻 Equipe
 <div align="center">
     <table>
